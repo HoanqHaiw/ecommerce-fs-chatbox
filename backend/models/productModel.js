@@ -11,12 +11,14 @@ const productSchema = new mongoose.Schema(
         price: { type: Number, required: true },
         description: { type: String },
         category: { type: String, required: true },
-        collections: { type: String, required: true },
-        images: [{ type: String }],
+        collections: { type: String, required: true }, // 🔹 field bắt buộc backend
         stock: { type: Number, default: 0 },
         sizes: [sizeSchema],
+        images: [String], // đường dẫn lưu ảnh
     },
     { timestamps: true }
 );
 
-export default mongoose.model("Product", productSchema);
+const Product = mongoose.model("Product", productSchema);
+
+export default Product;
