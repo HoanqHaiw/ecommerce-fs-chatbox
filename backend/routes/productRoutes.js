@@ -1,13 +1,20 @@
 import express from "express";
 import multer from "multer";
-import { createProduct, getAllProducts, getProductById } from "../controllers/productController.js";
+import {
+    createProduct,
+    getAllProducts,
+    getProductById,
+    updateProduct,
+    deleteProduct,
+    getProductsByCollection,
+} from "../controllers/productController.js";
 
 const router = express.Router();
 
-// Cấu hình multer lưu file vào thư mục /uploads
+// ⚙️ Cấu hình multer để upload ảnh
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "uploads/"); // nơi lưu file
+        cb(null, "uploads/");
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -16,13 +23,23 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Thêm sản phẩm mới (tối đa 3 ảnh)
+// -------------------- ROUTES --------------------
+
+
 router.post("/", upload.array("images", 3), createProduct);
 
-// Lấy danh sách sản phẩm
+
+router.put("/:id", upload.array("images", 3), updateProduct);
+
+
+router.delete("/:id", deleteProduct);
+
+
 router.get("/", getAllProducts);
 
-// Lấy chi tiết 1 sản phẩm
+
 router.get("/:id", getProductById);
+
+router.get("/collection/:collectionName", getProductsByCollection);
 
 export default router;

@@ -1,36 +1,35 @@
+import fs from "fs";
 import Product from "../models/productModel.js";
 
-// CREATE PRODUCT
+
 export const createProduct = async (req, res) => {
     try {
         const { name, price, description, category, collections, stock, sizes } = req.body;
 
-        // Validate bắt buộc
         if (!name || !price || !category || !collections) {
             return res.status(400).json({
                 success: false,
-                message: "Missing required fields: name, price, category, collections"
+                message: "Missing required fields: name, price, category, collections",
             });
         }
 
-        // Xử lý images nếu có
+        // Lưu đường dẫn ảnh
         const imagePaths = req.files?.map((file) => `/uploads/${file.filename}`) || [];
 
-        // Xử lý sizes: parse JSON nếu là string
+        // Xử lý sizes
         let formattedSizes = [];
         if (sizes) {
             try {
                 formattedSizes = typeof sizes === "string" ? JSON.parse(sizes) : sizes;
-                formattedSizes = formattedSizes.map(s => ({
+                formattedSizes = formattedSizes.map((s) => ({
                     size: s.size,
-                    quantity: Number(s.quantity) || 0
+                    quantity: Number(s.quantity) || 0,
                 }));
             } catch {
                 return res.status(400).json({ success: false, message: "Sizes format invalid" });
             }
         }
 
-        // Tạo product
         const product = await Product.create({
             name,
             price: Number(price),
@@ -43,13 +42,55 @@ export const createProduct = async (req, res) => {
         });
 
         res.status(201).json({ success: true, product });
-
     } catch (error) {
-        console.error("Error creating product:", error);
+        console.error(" Error creating product:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
-// Xóa sản phẩm
+
+// 🟡 CẬP NHẬT SẢN PHẨM
+export const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, price, category, description, stock, sizes, collections } = req.body;
+
+        const parsedSizes = sizes ? JSON.parse(sizes) : [];
+
+        const product = await Product.findById(id);
+        if (!product) return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+
+        // Cập nhật dữ liệu
+        product.name = name;
+        product.price = price;
+        product.category = category;
+        product.description = description;
+        product.stock = stock;
+        product.collections = collections;
+        product.sizes = parsedSizes;
+
+        // Nếu có ảnh mới thì thay thế
+        if (req.files && req.files.length > 0) {
+            // Xóa ảnh cũ
+            product.images.forEach((img) => {
+                const filePath = `.${img}`;
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+            });
+
+            // Lưu ảnh mới
+            product.images = req.files.map((file) => `/uploads/${file.filename}`);
+        }
+
+        await product.save();
+        res.json({ message: "Cập nhật sản phẩm thành công!", product });
+    } catch (error) {
+        console.error(" Lỗi updateProduct:", error);
+        res.status(500).json({ message: "Cập nhật thất bại", error: error.message });
+    }
+};
+
+
 export const deleteProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -57,26 +98,22 @@ export const deleteProduct = async (req, res) => {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
 
-        // Nếu muốn xóa cả file ảnh trên server, có thể thêm:
-        /*
-        const fs = require("fs");
-        product.images.forEach(imgPath => {
-            const fullPath = path.join(__dirname, "..", imgPath);
-            if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+
+        product.images.forEach((imgPath) => {
+            const filePath = `.${imgPath}`;
+            if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
         });
-        */
 
-        await product.remove();
+        await Product.deleteOne({ _id: req.params.id });
 
-        res.json({ success: true, message: "Product deleted" });
+        res.json({ success: true, message: "Product deleted successfully!" });
     } catch (error) {
-        console.error(error);
+        console.error(" Lỗi khi xóa sản phẩm:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
 
-// GET ALL PRODUCTS
 export const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find();
@@ -87,14 +124,27 @@ export const getAllProducts = async (req, res) => {
     }
 };
 
-// GET PRODUCT BY ID
+
 export const getProductById = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).json({ success: false, message: "Product not found" });
+        if (!product)
+            return res.status(404).json({ success: false, message: "Product not found" });
         res.json({ success: true, product });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+
+
+export const getProductsByCollection = async (req, res) => {
+    try {
+        const { collectionName } = req.params;
+        const products = await Product.find({ collections: collectionName });
+        res.json({ success: true, products });
+    } catch (error) {
+        console.error("❌ Lỗi khi lấy sản phẩm theo collection:", error);
+        res.status(500).json({ success: false, message: error.message });
     }
 };
