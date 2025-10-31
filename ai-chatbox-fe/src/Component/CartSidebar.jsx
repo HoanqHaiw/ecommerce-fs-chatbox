@@ -14,6 +14,7 @@ const CartSidebar = () => {
         closeSidebar,
     } = useCart();
 
+
     const formatPrice = (price) =>
         new Intl.NumberFormat("vi-VN").format(price) + " ₫";
 
@@ -41,24 +42,23 @@ const CartSidebar = () => {
                     <div className="sidebar-content">
                         {cartItems.map((item) => (
                             <div
-                                key={item._id || item.id}
+                                key={item.id}
                                 className="cart-item d-flex align-items-center"
                             >
                                 <img
-                                    src={item.image || item.img}
+                                    src={item.image || "/default-product.jpg"}
                                     alt={item.name}
                                     className="cart-item-img"
                                 />
+
                                 <div className="info flex-grow-1 ms-2">
                                     <h6 className="mb-1">{item.name}</h6>
-                                    <p className="text-muted mb-1">{formatPrice(item.price)}</p>
+                                    <p className="text-muted mb-1">
+                                        {formatPrice(item.price)}
+                                    </p>
 
                                     <div className="quantity d-flex align-items-center">
-                                        <button
-                                            onClick={() =>
-                                                decreaseQuantity(item._id || item.id)
-                                            }
-                                        >
+                                        <button onClick={() => decreaseQuantity(item.id)}>
                                             -
                                         </button>
                                         <span className="mx-2">{item.quantity}</span>
@@ -68,7 +68,7 @@ const CartSidebar = () => {
 
                                 <button
                                     className="remove"
-                                    onClick={() => removeFromCart(item._id || item.id)}
+                                    onClick={() => removeFromCart(item.id)}
                                 >
                                     Xoá
                                 </button>

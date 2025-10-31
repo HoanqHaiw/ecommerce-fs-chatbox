@@ -6,24 +6,36 @@ export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // ➕ Thêm sản phẩm & mở sidebar
+    //  Thêm sản phẩm & mở sidebar
     const addToCart = (product, quantity = 1) => {
         setCartItems((prev) => {
-            const existing = prev.find((item) => item.id === product.id);
+            const existing = prev.find(
+                (item) => item.id === product.id || item._id === product._id
+            );
+
             if (existing) {
                 return prev.map((item) =>
-                    item.id === product.id
+                    item.id === product.id || item._id === product._id
                         ? { ...item, quantity: item.quantity + quantity }
                         : item
                 );
             } else {
-                return [...prev, { ...product, quantity }];
+                return [
+                    ...prev,
+                    {
+                        id: product.id || product._id,
+                        name: product.name,
+                        price: Number(product.price),
+                        image: product.image || product.images?.[0] || "",
+                        quantity,
+                    },
+                ];
             }
         });
         setIsSidebarOpen(true);
     };
 
-    // ➖ Giảm số lượng
+    // Giảm số lượng
     const decreaseQuantity = (id) => {
         setCartItems((prev) =>
             prev
@@ -34,15 +46,14 @@ export const CartProvider = ({ children }) => {
         );
     };
 
-    // ❌ Xóa sản phẩm
+    //  Xóa sản phẩm
     const removeFromCart = (id) => {
         setCartItems((prev) => prev.filter((item) => item.id !== id));
     };
 
-    // 💰 Tính tổng
+    //  Tính tổng
     const subtotal = cartItems.reduce(
-        (sum, item) =>
-            sum + parseFloat(item.price.replace(/[^\d]/g, "")) * item.quantity,
+        (sum, item) => sum + item.price * item.quantity,
         0
     );
 
@@ -65,6 +76,8 @@ export const CartProvider = ({ children }) => {
             {children}
         </CartContext.Provider>
     );
+
+
 };
 
 export const useCart = () => useContext(CartContext);
