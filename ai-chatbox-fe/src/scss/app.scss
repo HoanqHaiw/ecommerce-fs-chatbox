@@ -1,0 +1,28 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+    height: 100%;
+}
+
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 70px; // tránh navbar che phần đầu
+}
+
+.content {
+    flex: 1;
+}
+
+footer {
+    background-color: #e0e1e1;
+    color: #090808;
+    text-align: center;
+    padding: 15px 0;
+}

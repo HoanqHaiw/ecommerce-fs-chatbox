@@ -1,0 +1,124 @@
+/* ---------- REVENUE PAGE (ManageRevenue.js) ---------- */
+
+.admin-page {
+    padding: 20px;
+    background-color: #f8f8f8;
+    min-height: 100vh;
+
+    h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+}
+
+/* ---------- FILTER ---------- */
+.filter-section {
+    // display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+
+    label {
+        font-weight: 500;
+    }
+
+    input,
+    select {
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        outline: none;
+    }
+
+    button {
+        background: #007bff;
+        color: #fff;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+            background: #0056b3;
+        }
+    }
+}
+
+/* ---------- SUMMARY CARDS ---------- */
+.summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+
+    .card {
+        background: #fff;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #333;
+        }
+    }
+}
+
+/* ---------- CHART ---------- */
+.chart-container {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- TABLE ---------- */
+.revenue-table {
+    width: 100%;
+    margin-top: 25px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    border-collapse: collapse;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    th,
+    td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f3f3f3;
+        font-weight: 600;
+    }
+
+    tr:hover {
+        background-color: #fafafa;
+    }
+}
+
+/* ---------- BACK BUTTON ---------- */
+.back-home {
+    margin-top: 20px;
+    padding: 8px 14px;
+    background: #ff5722;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+        background: #e64a19;
+    }
+}

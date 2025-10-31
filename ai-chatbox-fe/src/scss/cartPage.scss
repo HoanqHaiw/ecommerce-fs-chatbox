@@ -1,0 +1,22 @@
+.cart-page {
+    table {
+
+        th,
+        td {
+            vertical-align: middle;
+        }
+    }
+
+    .card {
+        border-radius: 10px;
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .btn-success {
+            font-weight: 600;
+            padding: 10px 0;
+        }
+    }
+}

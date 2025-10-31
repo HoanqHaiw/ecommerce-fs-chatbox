@@ -1,0 +1,118 @@
+.chatbox-container {
+    position: relative;
+    z-index: 9998;
+
+    .chatbox-toggle {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
+        }
+    }
+
+    .chatbox-window {
+        width: 320px;
+        height: 420px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .chatbox-header {
+        background: #4caf50;
+        color: white;
+        padding: 12px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h5 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+        }
+    }
+
+    .chatbox-messages {
+        flex: 1;
+        padding: 12px;
+        background: #f9f9f9;
+        overflow-y: auto;
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 14px;
+
+            &.bot {
+                background: #e0f7fa;
+                align-self: flex-start;
+            }
+        }
+    }
+
+    .chatbox-input {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+
+        input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        button {
+            margin-left: 8px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+
+            &:hover {
+                background-color: #45a049;
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

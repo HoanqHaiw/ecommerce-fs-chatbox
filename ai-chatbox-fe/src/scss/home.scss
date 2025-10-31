@@ -1,0 +1,75 @@
+/* --------- Banner FULL --------- */
+.banner-full {
+    width: 100vw;
+    /* full chiều ngang */
+    height: 1000px;
+    /* 👈 to hơn */
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.banner-full img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --------- GRID SẢN PHẨM --------- */
+.home-page .card {
+    border: none;
+    overflow: hidden;
+    border-radius: 10px;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-page .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Ảnh sản phẩm cùng kích thước */
+.home-page .card-img-top {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+}
+
+/* Nhãn “HOT” */
+.product-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff4757;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Hiệu ứng fade-in cho sản phẩm khi đổi */
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,30 @@
+.product-card {
+    position: relative;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.03);
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 2px 8px;
+        border-radius: 5px;
+    }
+
+    img {
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+}
