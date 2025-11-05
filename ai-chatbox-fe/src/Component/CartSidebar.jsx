@@ -88,13 +88,6 @@ const CartSidebar = () => {
                             <Link to="/cart" onClick={closeSidebar} className="view-cart">
                                 Xem Giỏ Hàng
                             </Link>
-                            <Link
-                                to="/checkout"
-                                onClick={closeSidebar}
-                                className="checkout"
-                            >
-                                Thanh Toán
-                            </Link>
                         </div>
                     </div>
                 )}

@@ -1,0 +1,198 @@
+{
+    "products": [
+        {
+            "name": "Nike Air Force 1 '07",
+            "category": "Men",
+            "price": 2900000,
+            "description": "Đôi giày huyền thoại Nike Air Force 1 '07 với thiết kế cổ điển, phối màu trắng tinh tế phù hợp mọi phong cách.",
+            "collections": "Classic Streetwear",
+            "stock": 50,
+            "sizes": [
+                {
+                    "size": 39,
+                    "quantity": 10
+                },
+                {
+                    "size": 41,
+                    "quantity": 20
+                },
+                {
+                    "size": 43,
+                    "quantity": 20
+                },
+                {
+                    "size": 44,
+                    "quantity": 10
+                }
+            ],
+            "images": [
+                "/uploads/nike-airforce1-1.jpg",
+                "/uploads/nike-airforce1-2.jpg",
+                "/uploads/nike-airforce1-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Air Max 270 React",
+            "category": "Men",
+            "price": 3800000,
+            "description": "Nike Air Max 270 React mang lại cảm giác êm ái, đàn hồi và năng động cho mỗi bước di chuyển.",
+            "collections": "Best Seller",
+            "stock": 40,
+            "sizes": [
+                {
+                    "size": 40,
+                    "quantity": 10
+                },
+                {
+                    "size": 42,
+                    "quantity": 15
+                },
+                {
+                    "size": 44,
+                    "quantity": 15
+                }
+            ],
+            "images": [
+                "/uploads/nike-airmax270-1.jpg",
+                "/uploads/nike-airmax270-2.jpg",
+                "/uploads/nike-airmax270-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Dunk Low Panda",
+            "category": "Women",
+            "price": 3500000,
+            "description": "Nike Dunk Low Panda phối màu trắng đen đơn giản nhưng sang trọng, phù hợp cho cả đi học và đi chơi.",
+            "collections": "New Arrivals",
+            "stock": 35,
+            "sizes": [
+                {
+                    "size": 36,
+                    "quantity": 5
+                },
+                {
+                    "size": 38,
+                    "quantity": 10
+                },
+                {
+                    "size": 40,
+                    "quantity": 20
+                }
+            ],
+            "images": [
+                "/uploads/nike-dunk-panda-1.jpg",
+                "/uploads/nike-dunk-panda-2.jpg",
+                "/uploads/nike-dunk-panda-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Air Zoom Pegasus 40",
+            "category": "Men",
+            "price": 4100000,
+            "description": "Nike Air Zoom Pegasus 40 là lựa chọn hoàn hảo cho các vận động viên chạy bộ với lớp đệm êm và độ bền vượt trội.",
+            "collections": "Summer 2025",
+            "stock": 30,
+            "sizes": [
+                {
+                    "size": 39,
+                    "quantity": 5
+                },
+                {
+                    "size": 41,
+                    "quantity": 15
+                },
+                {
+                    "size": 43,
+                    "quantity": 10
+                }
+            ],
+            "images": [
+                "/uploads/nike-pegasus40-1.jpg",
+                "/uploads/nike-pegasus40-2.jpg",
+                "/uploads/nike-pegasus40-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Blazer Mid '77 Vintage",
+            "category": "Women",
+            "price": 3200000,
+            "description": "Phong cách retro kết hợp hiện đại, Nike Blazer Mid '77 Vintage là lựa chọn tuyệt vời cho outfit đường phố.",
+            "collections": "Classic Streetwear",
+            "stock": 25,
+            "sizes": [
+                {
+                    "size": 36,
+                    "quantity": 5
+                },
+                {
+                    "size": 38,
+                    "quantity": 10
+                },
+                {
+                    "size": 40,
+                    "quantity": 10
+                }
+            ],
+            "images": [
+                "/uploads/nike-blazer77-1.jpg",
+                "/uploads/nike-blazer77-2.jpg",
+                "/uploads/nike-blazer77-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Air Jordan 1 Mid SE",
+            "category": "Men",
+            "price": 4200000,
+            "description": "Nike Air Jordan 1 Mid SE mang lại phong cách nổi bật và cá tính, biểu tượng của văn hóa sneaker.",
+            "collections": "Best Seller",
+            "stock": 45,
+            "sizes": [
+                {
+                    "size": 40,
+                    "quantity": 10
+                },
+                {
+                    "size": 42,
+                    "quantity": 20
+                },
+                {
+                    "size": 44,
+                    "quantity": 15
+                }
+            ],
+            "images": [
+                "/uploads/nike-jordan1mid-1.jpg",
+                "/uploads/nike-jordan1mid-2.jpg",
+                "/uploads/nike-jordan1mid-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Tote Bag Essential",
+            "category": "Accessories",
+            "price": 950000,
+            "description": "Túi Nike Essential Tote Bag tiện lợi, thời trang, phù hợp mang đi học, đi tập hoặc đi chơi.",
+            "collections": "Summer 2025",
+            "stock": 20,
+            "sizes": [],
+            "images": [
+                "/uploads/nike-totebag-1.jpg",
+                "/uploads/nike-totebag-2.jpg",
+                "/uploads/nike-totebag-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Heritage Backpack",
+            "category": "Accessories",
+            "price": 1250000,
+            "description": "Balo Nike Heritage được làm từ chất liệu bền đẹp, ngăn chứa rộng rãi và logo Nike nổi bật.",
+            "collections": "New Arrivals",
+            "stock": 25,
+            "sizes": [],
+            "images": [
+                "/uploads/nike-heritage-bag-1.jpg",
+                "/uploads/nike-heritage-bag-2.jpg",
+                "/uploads/nike-heritage-bag-3.jpg"
+            ]
+        }
+    ]
+}

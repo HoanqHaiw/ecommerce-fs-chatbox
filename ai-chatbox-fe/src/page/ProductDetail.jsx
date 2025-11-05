@@ -63,7 +63,21 @@ const ProductDetail = () => {
             alert("Vui lòng chọn size trước khi thêm vào giỏ hàng!");
             return;
         }
-        addToCart({ ...product, selectedSize }, quantity, true);
+
+        // ✅ Lấy ảnh hiển thị chính xác
+        const productImage =
+            product.images && product.images.length > 0
+                ? (product.images[0].startsWith("http")
+                    ? product.images[0]
+                    : `http://localhost:5000${product.images[0]}`)
+                : product.image
+                    ? (product.image.startsWith("http")
+                        ? product.image
+                        : `http://localhost:5000${product.image}`)
+                    : "https://via.placeholder.com/100?text=No+Image";
+
+        // ✅ Gọi addToCart với trường image chuẩn
+        addToCart({ ...product, selectedSize, image: productImage }, quantity, true);
     };
 
     return (<div className="product-detail-page"> <Navbar />
@@ -125,8 +139,8 @@ const ProductDetail = () => {
                                         <button
                                             key={i}
                                             className={`btn btn-sm me-2 ${selectedSize === (s.size || s)
-                                                    ? "btn-dark"
-                                                    : "btn-outline-dark"
+                                                ? "btn-dark"
+                                                : "btn-outline-dark"
                                                 }`}
                                             onClick={() => setSelectedSize(s.size || s)}
                                         >
@@ -165,7 +179,13 @@ const ProductDetail = () => {
                     </div>
                 </div>
             </div>
-
+            <div className="fixed-banner my-5 text-center">
+                <img
+                    src="https://static.nike.com/a/images/f_auto,cs_srgb/w_1536,c_limit/8056cc98-b505-4ef7-b0fd-7737b1a40f5e/how-to-measure-your-foot-to-find-the-right-shoe-size.jpg"
+                    alt="ảnh size"
+                    className="img-fluid rounded shadow-sm"
+                />
+            </div>
             {/* Sản phẩm tương tự */}
             {related.length > 0 && (
                 <div className="related-products mt-5">

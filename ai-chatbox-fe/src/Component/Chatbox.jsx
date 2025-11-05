@@ -27,7 +27,7 @@ const ChatBox = () => {
                     </div>
                 ) : (
                     <button className="chatbox-toggle" onClick={() => setIsOpen(true)}>
-                        💬
+                        💬 <span>Chat Us</span>
                     </button>
                 )}
             </div>

@@ -7,7 +7,7 @@ const AddProduct = ({ onClose, onSave }) => {
         price: "",
         description: "",
         category: "",
-        collection: "No Collection",
+        collection: "No Collection", // ✅ đúng với backend
         stock: 0,
         sizes: [{ size: "", quantity: 0 }],
         images: [],
@@ -21,7 +21,7 @@ const AddProduct = ({ onClose, onSave }) => {
         setProduct({ ...product, images: e.target.files });
     };
 
-    // 🧩 Xử lý thêm/xóa/đổi size
+    // 🧩 Quản lý kích cỡ và số lượng
     const handleSizeChange = (index, field, value) => {
         const updatedSizes = [...product.sizes];
         updatedSizes[index][field] = value;
@@ -29,7 +29,10 @@ const AddProduct = ({ onClose, onSave }) => {
     };
 
     const addSizeRow = () => {
-        setProduct({ ...product, sizes: [...product.sizes, { size: "", quantity: 0 }] });
+        setProduct({
+            ...product,
+            sizes: [...product.sizes, { size: "", quantity: 0 }],
+        });
     };
 
     const removeSizeRow = (index) => {
@@ -45,19 +48,24 @@ const AddProduct = ({ onClose, onSave }) => {
         formData.append("price", product.price);
         formData.append("description", product.description);
         formData.append("category", product.category);
-        formData.append("collections", product.collections);
+        formData.append("collection", product.collection); // ✅ sửa đúng key
         formData.append("stock", product.stock);
 
         // Gửi mảng sizes dưới dạng JSON
         formData.append("sizes", JSON.stringify(product.sizes));
 
+        // Gửi tối đa 3 ảnh
         for (let i = 0; i < Math.min(product.images.length, 3); i++) {
             formData.append("images", product.images[i]);
         }
 
-        await addProduct(formData);
-        onSave();
-        onClose();
+        try {
+            await addProduct(formData);
+            onSave();
+            onClose();
+        } catch (error) {
+            console.error("❌ Lỗi khi thêm sản phẩm:", error);
+        }
     };
 
     return (
@@ -65,19 +73,45 @@ const AddProduct = ({ onClose, onSave }) => {
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <h3>Thêm sản phẩm mới</h3>
 
-                <input type="text" name="name" placeholder="Tên sản phẩm" onChange={handleChange} required />
-                <input type="number" name="price" placeholder="Giá" onChange={handleChange} required />
-                <textarea name="description" placeholder="Mô tả sản phẩm" onChange={handleChange}></textarea>
-                <input type="text" name="category" placeholder="Danh mục" onChange={handleChange} required />
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Tên sản phẩm"
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="number"
+                    name="price"
+                    placeholder="Giá"
+                    onChange={handleChange}
+                    required
+                />
+                <textarea
+                    name="description"
+                    placeholder="Mô tả sản phẩm"
+                    onChange={handleChange}
+                />
+                <input
+                    type="text"
+                    name="category"
+                    placeholder="Danh mục"
+                    onChange={handleChange}
+                    required
+                />
 
-                {/* 🧺 Chọn bộ sưu tập */}
+                {/* 🧺 Bộ sưu tập */}
                 <label>Bộ sưu tập:</label>
-                <select name="collections" value={product.collections} onChange={handleChange}>
+                <select
+                    name="collection"
+                    value={product.collection}
+                    onChange={handleChange}
+                >
                     <option value="Summer 2025">Summer 2025</option>
                     <option value="Classic Streetwear">Classic Streetwear</option>
                     <option value="Best Seller">Best Seller</option>
                     <option value="New Arrivals">New Arrivals</option>
-                    <option value="No Collections">No Collections</option>
+                    <option value="No Collection">No Collection</option>
                 </select>
 
                 <input
@@ -87,37 +121,63 @@ const AddProduct = ({ onClose, onSave }) => {
                     onChange={handleChange}
                 />
 
-                {/* 👕 Quản lý size + số lượng */}
+                {/* 👕 Size + số lượng */}
                 <label>Kích cỡ và số lượng:</label>
                 {product.sizes.map((s, index) => (
-                    <div key={index} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <div
+                        key={index}
+                        style={{
+                            display: "flex",
+                            gap: "8px",
+                            alignItems: "center",
+                        }}
+                    >
                         <input
                             type="text"
                             placeholder="Size (vd: S, M, L)"
                             value={s.size}
-                            onChange={(e) => handleSizeChange(index, "size", e.target.value)}
+                            onChange={(e) =>
+                                handleSizeChange(index, "size", e.target.value)
+                            }
                             required
                         />
                         <input
                             type="number"
                             placeholder="Số lượng"
                             value={s.quantity}
-                            onChange={(e) => handleSizeChange(index, "quantity", e.target.value)}
+                            onChange={(e) =>
+                                handleSizeChange(index, "quantity", e.target.value)
+                            }
                             required
                         />
                         {product.sizes.length > 1 && (
-                            <button type="button" onClick={() => removeSizeRow(index)}>−</button>
+                            <button
+                                type="button"
+                                onClick={() => removeSizeRow(index)}
+                            >
+                                −
+                            </button>
                         )}
                     </div>
                 ))}
-                <button type="button" onClick={addSizeRow}>+ Thêm size</button>
+                <button type="button" onClick={addSizeRow}>
+                    + Thêm size
+                </button>
 
                 <label>Chọn tối đa 3 ảnh:</label>
-                <input type="file" name="images" multiple accept="image/*" onChange={handleFileChange} />
+                <input
+                    type="file"
+                    name="images"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileChange}
+                />
 
                 <div className="actions">
                     <button type="submit">Lưu</button>
-                    <button type="button" onClick={onClose}>Hủy</button>
+                    <button type="button" onClick={onClose}>
+                        Hủy
+                    </button>
                 </div>
             </form>
         </div>
