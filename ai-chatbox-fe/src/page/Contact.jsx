@@ -4,7 +4,7 @@ import "../scss/contact.scss";
 const Contact = () => {
     return (
         <div className="contact-page container py-5">
-            <h2 className="contact-title">Liên hệ với chúng tôi</h2>
+            <h2 className="contact-title">Contact With Us</h2>
             <p className="contact-desc">
                 Nếu bạn có bất kỳ câu hỏi nào về sản phẩm hoặc dịch vụ, vui lòng liên hệ với chúng tôi qua biểu mẫu dưới đây hoặc ghé trực tiếp cửa hàng.
             </p>
@@ -12,26 +12,26 @@ const Contact = () => {
             <div className="contact-content">
                 {/* Cột trái: thông tin liên hệ */}
                 <div className="contact-info">
-                    <h4>Thông tin liên hệ</h4>
-                    <p><strong>Địa chỉ:</strong> 41 Yên Nội, Quốc Oai, TP.HN</p>
-                    <p><strong>Điện thoại:</strong> 0389816563</p>
+                    <h4>Information Contact</h4>
+                    <p><strong>Location:</strong> 41 Yen Noi, Quoc Oai, TP.HN</p>
+                    <p><strong>Phone:</strong> 0389816563</p>
                     <p><strong>Email:</strong> support@doantongoutlet.vn</p>
-                    <p><strong>Giờ làm việc:</strong> Thứ 2 - CN, 8:00 - 21:00</p>
+                    <p><strong>Working:</strong> Monday - Sunday, 8:00 - 21:00</p>
                 </div>
 
                 {/* Cột phải: form liên hệ */}
                 <form className="contact-form">
-                    <h4>Gửi tin nhắn cho chúng tôi</h4>
+                    <h4>Send Messeger With Us</h4>
                     <div className="form-group">
-                        <input type="text" placeholder="Họ và tên" required />
+                        <input type="text" placeholder="Name" required />
                     </div>
                     <div className="form-group">
                         <input type="email" placeholder="Email" required />
                     </div>
                     <div className="form-group">
-                        <textarea rows="5" placeholder="Nội dung tin nhắn..." required></textarea>
+                        <textarea rows="5" required></textarea>
                     </div>
-                    <button type="submit" className="send-btn">Gửi liên hệ</button>
+                    <button type="submit" className="send-btn">Send Contact</button>
                 </form>
             </div>
 

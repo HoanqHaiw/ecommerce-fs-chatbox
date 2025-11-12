@@ -17,10 +17,10 @@ import CollectionDetail from "./page/CollectionDetail";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import CheckOrder from "./page/checkorder.jsx";
 import "./scss/app.scss";
 import "./scss/cartSidebar.scss";
-import "./scss/phoneRing.scss";
+import "./scss/ringCommon.scss";
 import "./scss/floatingButtons.scss";
 
 function App() {
@@ -37,6 +37,7 @@ function App() {
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:id" element={<ProductDetail />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/check-order" element={<CheckOrder />} />
                 <Route path="/collections" element={<Collections />} />
                 <Route path="/collections/:id" element={<CollectionDetail />} />
                 <Route path="/contact" element={<Contact />} />

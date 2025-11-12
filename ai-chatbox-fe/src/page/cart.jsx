@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import citiesData from "../data/tinh_tp.json";
 import districtsData from "../data/quan_huyen.json";
 import wardsData from "../data/xa_phuong.json";
-import discountData from "../data/discounts.json"; // 📦 file chứa mã giảm giá
+import discountData from "../data/discounts.json";
 
 const Cart = () => {
     const navigate = useNavigate();
-    const { cartItems, decreaseQuantity, addToCart, removeFromCart, subtotal } = useCart();
+    const { cartItems, decreaseQuantity, addToCart, removeFromCart, subtotal, clearCart } = useCart();
 
     // Địa chỉ
     const [cities, setCities] = useState([]);
@@ -21,6 +21,7 @@ const Cart = () => {
     const [selectedWard, setSelectedWard] = useState("");
 
     const [specificAddress, setSpecificAddress] = useState("");
+    const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [phoneError, setPhoneError] = useState("");
 
@@ -112,7 +113,8 @@ const Cart = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    // 🧾 Thanh toán
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (phoneError || phone.length !== 10) {
@@ -125,20 +127,44 @@ const Cart = () => {
             return;
         }
 
-        if (paymentMethod === "online") {
-            if (!onlineMethod) {
-                setMessage({ type: "error", text: "Vui lòng chọn ví điện tử!" });
-                return;
-            }
-
-            if (!showQR) {
-                setShowQR(true);
-                return;
-            }
+        if (paymentMethod === "online" && !onlineMethod) {
+            setMessage({ type: "error", text: "Vui lòng chọn ví điện tử!" });
+            return;
         }
 
-        setMessage({ type: "success", text: "✅ Thanh toán thành công!" });
-        setTimeout(() => navigate("/"), 2500);
+        if (paymentMethod === "online" && !showQR) {
+            setShowQR(true);
+            return;
+        }
+
+        const finalTotal = subtotal - (subtotal * discountPercent) / 100;
+
+        try {
+            const orderData = {
+                name: name || "Khách hàng",
+                total: finalTotal,
+                status: "pending",
+            };
+
+            // Gửi đơn hàng lên backend
+            const res = await fetch("http://localhost:5000/api/orders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderData),
+            });
+
+            if (!res.ok) throw new Error("Lỗi khi tạo đơn hàng");
+
+            // Xoá giỏ hàng sau khi thanh toán
+            clearCart();
+            localStorage.removeItem("cartItems");
+
+            setMessage({ type: "success", text: "✅ Thanh toán thành công!" });
+            setTimeout(() => navigate("/"), 2000);
+        } catch (error) {
+            console.error("Lỗi khi tạo đơn hàng:", error);
+            setMessage({ type: "error", text: "Đã xảy ra lỗi khi tạo đơn hàng!" });
+        }
     };
 
     const finalTotal = subtotal - (subtotal * discountPercent) / 100;
@@ -199,7 +225,13 @@ const Cart = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label>Họ tên</label>
-                            <input type="text" className="form-control" required />
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                            />
                         </div>
 
                         {/* Địa chỉ */}

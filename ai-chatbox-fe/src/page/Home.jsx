@@ -51,7 +51,7 @@ const Home = () => {
 
             {/* Sản phẩm nổi bật */}
             <div className="container mt-5">
-                <h2 className="mb-4 text-center">Sản phẩm nổi bật</h2>
+                <h2 className="mb-4 text-center">Hot Products</h2>
                 <div className="row row-cols-1 row-cols-md-4 g-4 fade-in">
                     {visibleProducts.map((p) => (
                         <div className="col" key={p._id}>

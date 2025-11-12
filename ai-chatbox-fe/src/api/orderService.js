@@ -1,36 +1,50 @@
-// src/api/orderService.js
-let mockOrders = [
-    {
-        id: 1,
-        customer: "Nguyễn Văn A",
-        total: 500000,
-        status: "Đang xử lý",
-        date: "2025-10-25",
-        items: [
-            { name: "Áo thun", qty: 2, price: 150000 },
-            { name: "Quần kaki", qty: 1, price: 200000 },
-        ],
-    },
-    {
-        id: 2,
-        customer: "Trần Thị B",
-        total: 350000,
-        status: "Hoàn tất",
-        date: "2025-10-24",
-        items: [{ name: "Váy hoa", qty: 1, price: 350000 }],
-    },
-];
+import axios from "axios";
 
-export const getOrders = async () => mockOrders;
+const API_URL = "http://localhost:5000/api/orders";
 
-export const updateOrderStatus = async (id, newStatus) => {
-    mockOrders = mockOrders.map((o) =>
-        o.id === id ? { ...o, status: newStatus } : o
-    );
-    return true;
+// get list order
+export const getOrders = async () => {
+    try {
+        const res = await axios.get(API_URL);
+        return res.data.map((order) => ({
+            id: order._id,
+            name: order.name || "Unknown",
+            total: order.total || 0,
+            status: order.status || "pending",
+            orderDate: order.orderDate ? order.orderDate.substring(0, 10) : "",
+        }));
+    } catch (error) {
+        console.error("❌ Error fetching orders:", error);
+        return [];
+    }
 };
 
+// update active order
+export const updateOrderStatus = async (id, status) => {
+    try {
+        const res = await axios.put(`${API_URL}/${id}`, { status });
+        return res.data;
+    } catch (error) {
+        console.error("❌ Error updating order:", error);
+    }
+};
+
+// delete order
 export const deleteOrder = async (id) => {
-    mockOrders = mockOrders.filter((o) => o.id !== id);
-    return true;
+    try {
+        const res = await axios.delete(`${API_URL}/${id}`);
+        return res.data;
+    } catch (error) {
+        console.error("❌ Error deleting order:", error);
+    }
+};
+
+// add order (neu can)
+export const createOrder = async (orderData) => {
+    try {
+        const res = await axios.post(API_URL, orderData);
+        return res.data;
+    } catch (error) {
+        console.error("❌ Error creating order:", error);
+    }
 };

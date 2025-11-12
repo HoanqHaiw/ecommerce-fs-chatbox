@@ -1,8 +1,8 @@
 import React from "react";
 import "../scss/about.scss";
-import team1 from "../assets/img/img1.jpg";
-import team2 from "../assets/img/img2.jpg";
-import team3 from "../assets/img/img3.jpg";
+import team1 from "../assets/img/cv1.jpg";
+import team2 from "../assets/img/deha.jpg";
+import team3 from "../assets/img/taxua.jpg";
 
 const About = () => {
     return (
@@ -66,18 +66,18 @@ const About = () => {
                 <h2>Meet Our Team</h2>
                 <div className="team-grid">
                     <div className="team-member">
-                        <img src={team1} alt="Alex Nguyen" />
-                        <h4>Alex Nguyen</h4>
+                        <img src={team1} alt="Justin Hoang" />
+                        <h4>Justin Hoang</h4>
                         <p>Founder / CEO</p>
                     </div>
                     <div className="team-member">
-                        <img src={team2} alt="Lisa Tran" />
-                        <h4>Lisa Tran</h4>
+                        <img src={team2} alt="Adam Nguyen" />
+                        <h4>Adam Nguyen</h4>
                         <p>Marketing Lead</p>
                     </div>
                     <div className="team-member">
-                        <img src={team3} alt="David Pham" />
-                        <h4>David Pham</h4>
+                        <img src={team3} alt="David Nguyen" />
+                        <h4>David Nguyen</h4>
                         <p>Product Manager</p>
                     </div>
                 </div>

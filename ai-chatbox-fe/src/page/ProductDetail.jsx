@@ -22,7 +22,7 @@ const ProductDetail = () => {
                 const fetched = res.data.product || res.data;
 
                 setProduct(fetched);
-                // ✅ Ảnh mặc định: ảnh đầu tiên trong mảng
+                //  Ảnh mặc định: ảnh đầu tiên trong mảng
                 if (fetched.images?.length > 0) {
                     const firstImage = fetched.images[0].startsWith("http")
                         ? fetched.images[0]
@@ -36,7 +36,7 @@ const ProductDetail = () => {
                     );
                 }
 
-                // ✅ Lấy sản phẩm liên quan
+                //  Lấy sản phẩm liên quan
                 if (fetched.category) {
                     const relatedRes = await axios.get(
                         `http://localhost:5000/api/products?category=${fetched.category}`
@@ -45,7 +45,7 @@ const ProductDetail = () => {
                     setRelated(relatedList.filter((p) => p._id !== fetched._id));
                 }
             } catch (err) {
-                console.error("❌ Lỗi khi lấy sản phẩm:", err);
+                console.error("Error get products", err);
             }
         };
         fetchProduct();
@@ -60,11 +60,11 @@ const ProductDetail = () => {
 
     const handleAddToCart = () => {
         if (!selectedSize) {
-            alert("Vui lòng chọn size trước khi thêm vào giỏ hàng!");
+            alert("select size when add to cart");
             return;
         }
 
-        // ✅ Lấy ảnh hiển thị chính xác
+        //  Lấy ảnh hiển thị chính xác
         const productImage =
             product.images && product.images.length > 0
                 ? (product.images[0].startsWith("http")
@@ -76,7 +76,7 @@ const ProductDetail = () => {
                         : `http://localhost:5000${product.image}`)
                     : "https://via.placeholder.com/100?text=No+Image";
 
-        // ✅ Gọi addToCart với trường image chuẩn
+        //  Gọi addToCart với trường image chuẩn
         addToCart({ ...product, selectedSize, image: productImage }, quantity, true);
     };
 
@@ -152,7 +152,7 @@ const ProductDetail = () => {
                         )}
 
                         <div className="d-flex align-items-center mb-3">
-                            <strong className="me-2">Số lượng:</strong>
+                            <strong className="me-2">Quantity:</strong>
                             <button
                                 className="btn btn-outline-dark btn-sm"
                                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -170,10 +170,10 @@ const ProductDetail = () => {
 
                         <div className="button-group">
                             <Link to="/products" className="btn btn-outline-dark me-2">
-                                ← Quay lại sản phẩm
+                                ← Back
                             </Link>
                             <button className="btn btn-dark" onClick={handleAddToCart}>
-                                Thêm vào giỏ hàng
+                                Add
                             </button>
                         </div>
                     </div>
@@ -189,7 +189,7 @@ const ProductDetail = () => {
             {/* Sản phẩm tương tự */}
             {related.length > 0 && (
                 <div className="related-products mt-5">
-                    <h4 className="text-center mb-4">Sản phẩm tương tự</h4>
+                    <h4 className="text-center mb-4">Products Same</h4>
                     <div className="product-grid">
                         {related.slice(0, 4).map((p) => (
                             <ProductCard key={p._id} product={p} />

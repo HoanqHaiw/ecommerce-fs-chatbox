@@ -1,78 +1,59 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import Navbar from "../Component/Navbar";
+import Footer from "../Component/Footer";
+import { getProductsByCollection } from "../api/productService";
 import "../scss/collectionDetail.scss";
 
 const CollectionDetail = () => {
-    const { id } = useParams();
-
-    // ✅ Dữ liệu mẫu tạm thời (sau này thay bằng dữ liệu thật từ DB)
-    const collectionsData = [
-        {
-            id: 1,
-            name: "Streetwear Collection",
-            description: "Phong cách năng động, cá tính dành cho giới trẻ hiện đại.",
-            image: require("../assets/img/ads1.jpg"),
-        },
-        {
-            id: 2,
-            name: "Summer Vibes",
-            description: "Bộ sưu tập mùa hè với tone màu tươi sáng, mát mẻ.",
-            image: require("../assets/img/img1.jpg"),
-        },
-        {
-            id: 3,
-            name: "Classic Minimal",
-            description: "Tinh tế, tối giản nhưng vẫn đậm phong cách riêng.",
-            image: require("../assets/img/ads.jpg"),
-        },
-    ];
-
-    const productsData = [
-        { id: 101, name: "Áo thun trắng Basic", price: 250000, image: require("../assets/img/img1.jpg"), collectionId: 1 },
-        { id: 102, name: "Quần short camo", price: 350000, image: require("../assets/img/img2.jpg"), collectionId: 1 },
-        { id: 103, name: "Sneaker trắng", price: 800000, image: require("../assets/img/img3.jpg"), collectionId: 2 },
-        { id: 104, name: "Áo sơ mi linen", price: 450000, image: require("../assets/img/img4.jpg"), collectionId: 2 },
-        { id: 105, name: "Áo khoác minimalist", price: 700000, image: require("../assets/img/img5.jpg"), collectionId: 3 },
-    ];
-
-    const [collection, setCollection] = useState(null);
+    const { id } = useParams(); // collectionName
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const foundCollection = collectionsData.find(c => c.id === Number(id));
-        const filteredProducts = productsData.filter(p => p.collectionId === Number(id));
-
-        setCollection(foundCollection);
-        setProducts(filteredProducts);
+        const fetchProducts = async () => {
+            try {
+                setLoading(true);
+                const data = await getProductsByCollection(id);
+                setProducts(data);
+            } catch (err) {
+                console.error("Error fetching collection products:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProducts();
     }, [id]);
 
-    if (!collection) return <h3 style={{ textAlign: "center" }}>Không tìm thấy bộ sưu tập.</h3>;
+    if (loading) return <p className="loading">Đang tải...</p>;
+    if (products.length === 0) return <p>Chưa có sản phẩm trong bộ sưu tập này.</p>;
 
     return (
         <div className="collection-detail-page">
-            {/* ---------- BANNER ---------- */}
-            <div className="banner">
-                <img src={collection.image} alt={collection.name} />
-                <div className="overlay">
-                    <h1>{collection.name}</h1>
-                    <p>{collection.description}</p>
-                </div>
+            <Navbar />
+
+            <section className="collection-header">
+                <h1>{id}</h1>
+                <p>Các sản phẩm nổi bật trong bộ sưu tập "{id}"</p>
+            </section>
+
+            <div className="products-container">
+                {products.map((product) => (
+                    <div key={product._id} className="product-card fade-in">
+                        <img src={product.images[0]} alt={product.name} className="product-image" />
+                        <div className="product-info">
+                            <h3>{product.name}</h3>
+                            <p className="price">{product.price.toLocaleString()}₫</p>
+                            <Link to={`/products/${product._id}`} className="view-btn">
+                                Xem Chi Tiết
+                            </Link>
+                        </div>
+                    </div>
+                ))}
             </div>
 
-            {/* ---------- DANH SÁCH SẢN PHẨM ---------- */}
-            <div className="product-section container">
-                <h2>Sản phẩm trong bộ sưu tập</h2>
-                <div className="product-grid">
-                    {products.map((product) => (
-                        <div key={product.id} className="card">
-                            <img src={product.image} alt={product.name} />
-                            <div className="card-body">
-                                <h6>{product.name}</h6>
-                                <p>{product.price.toLocaleString()}₫</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+            <div className="back-button">
+                <Link to="/collections">← Quay lại Collections</Link>
             </div>
         </div>
     );

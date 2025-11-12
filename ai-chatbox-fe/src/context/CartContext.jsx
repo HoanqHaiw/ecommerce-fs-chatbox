@@ -6,7 +6,7 @@ export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    //  Thêm sản phẩm & mở sidebar
+
     const addToCart = (product, quantity = 1) => {
         setCartItems((prev) => {
             const existing = prev.find(
@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
         setIsSidebarOpen(true);
     };
 
-    // Giảm số lượng
+
     const decreaseQuantity = (id) => {
         setCartItems((prev) =>
             prev
@@ -46,12 +46,17 @@ export const CartProvider = ({ children }) => {
         );
     };
 
-    //  Xóa sản phẩm
+
     const removeFromCart = (id) => {
         setCartItems((prev) => prev.filter((item) => item.id !== id));
     };
 
-    //  Tính tổng
+    const clearCart = () => {
+        setCartItems([]);
+        localStorage.removeItem("cartItems");
+    };
+
+
     const subtotal = cartItems.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
@@ -67,6 +72,7 @@ export const CartProvider = ({ children }) => {
                 addToCart,
                 decreaseQuantity,
                 removeFromCart,
+                clearCart,
                 subtotal,
                 isSidebarOpen,
                 openSidebar,
@@ -76,8 +82,6 @@ export const CartProvider = ({ children }) => {
             {children}
         </CartContext.Provider>
     );
-
-
 };
 
 export const useCart = () => useContext(CartContext);

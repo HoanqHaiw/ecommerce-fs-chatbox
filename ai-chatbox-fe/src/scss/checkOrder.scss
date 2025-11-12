@@ -1,0 +1,58 @@
+.check-order-page {
+    max-width: 700px;
+    margin: 0 auto;
+
+    h3 {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    form {
+        label {
+            font-weight: 500;
+        }
+
+        .form-control {
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+        }
+    }
+
+    .alert {
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .order-details {
+        background: #f8f9fa;
+        border-radius: 6px;
+        padding: 1rem;
+
+        h5 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 0.5rem;
+        }
+
+        h6 {
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        .border-bottom {
+            border-bottom: 1px solid #dee2e6;
+        }
+    }
+
+    .btn-secondary {
+        display: inline-block;
+        margin-top: 1rem;
+    }
+}

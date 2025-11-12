@@ -7,7 +7,7 @@ const AddProduct = ({ onClose, onSave }) => {
         price: "",
         description: "",
         category: "",
-        collection: "No Collection", // ✅ đúng với backend
+        collection: "No Collection",
         stock: 0,
         sizes: [{ size: "", quantity: 0 }],
         images: [],
@@ -48,7 +48,7 @@ const AddProduct = ({ onClose, onSave }) => {
         formData.append("price", product.price);
         formData.append("description", product.description);
         formData.append("category", product.category);
-        formData.append("collection", product.collection); // ✅ sửa đúng key
+        formData.append("collection", product.collection);
         formData.append("stock", product.stock);
 
         // Gửi mảng sizes dưới dạng JSON
@@ -64,44 +64,42 @@ const AddProduct = ({ onClose, onSave }) => {
             onSave();
             onClose();
         } catch (error) {
-            console.error("❌ Lỗi khi thêm sản phẩm:", error);
+            console.error("Error add products:", error);
         }
     };
 
     return (
         <div className="modal">
             <form onSubmit={handleSubmit} encType="multipart/form-data">
-                <h3>Thêm sản phẩm mới</h3>
+                <h3>Add Products</h3>
 
                 <input
                     type="text"
                     name="name"
-                    placeholder="Tên sản phẩm"
+                    placeholder="Name Product"
                     onChange={handleChange}
                     required
                 />
                 <input
                     type="number"
                     name="price"
-                    placeholder="Giá"
+                    placeholder="Price"
                     onChange={handleChange}
                     required
                 />
                 <textarea
                     name="description"
-                    placeholder="Mô tả sản phẩm"
+                    placeholder="Decriptions"
                     onChange={handleChange}
                 />
                 <input
                     type="text"
                     name="category"
-                    placeholder="Danh mục"
+                    placeholder="Category"
                     onChange={handleChange}
                     required
                 />
-
-                {/* 🧺 Bộ sưu tập */}
-                <label>Bộ sưu tập:</label>
+                <label>Collections:</label>
                 <select
                     name="collection"
                     value={product.collection}
@@ -117,12 +115,11 @@ const AddProduct = ({ onClose, onSave }) => {
                 <input
                     type="number"
                     name="stock"
-                    placeholder="Tổng số lượng tồn kho"
+                    placeholder="Total inventory"
                     onChange={handleChange}
                 />
 
-                {/* 👕 Size + số lượng */}
-                <label>Kích cỡ và số lượng:</label>
+                <label>Size and Quantity:</label>
                 {product.sizes.map((s, index) => (
                     <div
                         key={index}
@@ -134,7 +131,6 @@ const AddProduct = ({ onClose, onSave }) => {
                     >
                         <input
                             type="text"
-                            placeholder="Size (vd: S, M, L)"
                             value={s.size}
                             onChange={(e) =>
                                 handleSizeChange(index, "size", e.target.value)
@@ -143,7 +139,7 @@ const AddProduct = ({ onClose, onSave }) => {
                         />
                         <input
                             type="number"
-                            placeholder="Số lượng"
+                            placeholder="Quantity"
                             value={s.quantity}
                             onChange={(e) =>
                                 handleSizeChange(index, "quantity", e.target.value)
@@ -161,10 +157,10 @@ const AddProduct = ({ onClose, onSave }) => {
                     </div>
                 ))}
                 <button type="button" onClick={addSizeRow}>
-                    + Thêm size
+                    + Add Size
                 </button>
 
-                <label>Chọn tối đa 3 ảnh:</label>
+                <label>Select 3 img</label>
                 <input
                     type="file"
                     name="images"
@@ -176,7 +172,7 @@ const AddProduct = ({ onClose, onSave }) => {
                 <div className="actions">
                     <button type="submit">Lưu</button>
                     <button type="button" onClick={onClose}>
-                        Hủy
+                        Cancel
                     </button>
                 </div>
             </form>

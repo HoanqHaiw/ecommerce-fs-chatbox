@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Component/Navbar";
 import ProductCard from "../Component/ProductCard";
 import "../scss/products.scss";
@@ -10,20 +11,33 @@ const Products = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("default");
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const res = await axios.get("http://localhost:5000/api/products");
                 setProducts(res.data.products || []);
             } catch (error) {
-                console.error("Lỗi khi lấy danh sách sản phẩm:", error);
+                console.error("error get products", error);
             }
         };
         fetchProducts();
     }, []);
 
+    const handleCategoryClick = (cat) => {
+        // Nếu click "Collections" thì chuyển hướng sang trang collection
+        if (cat === "Collections") {
+            navigate("/collections");
+        } else {
+            setSelectedCategory(cat);
+        }
+    };
+
     const filteredProducts = products
-        .filter((p) => selectedCategory === "All" ? true : p.category === selectedCategory)
+        .filter((p) =>
+            selectedCategory === "All" ? true : p.category === selectedCategory
+        )
         .filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
         .sort((a, b) => {
             if (sortOption === "price-asc") return a.price - b.price;
@@ -38,19 +52,21 @@ const Products = () => {
                 <div className="sidebar">
                     <h5>Category</h5>
                     <ul>
-                        {["All", "Men", "Women", "Collections", "Accessories"].map((cat) => (
-                            <li
-                                key={cat}
-                                onClick={() => setSelectedCategory(cat)}
-                                style={{
-                                    fontWeight: selectedCategory === cat ? "600" : "400",
-                                    color: selectedCategory === cat ? "#007bff" : "#111",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                {cat}
-                            </li>
-                        ))}
+                        {["All", "Men", "Women", "Collections", "Accessories"].map(
+                            (cat) => (
+                                <li
+                                    key={cat}
+                                    onClick={() => handleCategoryClick(cat)}
+                                    style={{
+                                        fontWeight: selectedCategory === cat ? "600" : "400",
+                                        color: selectedCategory === cat ? "#007bff" : "#111",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    {cat}
+                                </li>
+                            )
+                        )}
                     </ul>
 
                     <div className="filter-section">

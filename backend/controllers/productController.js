@@ -48,7 +48,6 @@ export const createProduct = async (req, res) => {
     }
 };
 
-// 🟡 CẬP NHẬT SẢN PHẨM
 export const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
@@ -57,7 +56,7 @@ export const updateProduct = async (req, res) => {
         const parsedSizes = sizes ? JSON.parse(sizes) : [];
 
         const product = await Product.findById(id);
-        if (!product) return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+        if (!product) return res.status(404).json({ message: "products not value" });
 
         // Cập nhật dữ liệu
         product.name = name;
@@ -83,10 +82,10 @@ export const updateProduct = async (req, res) => {
         }
 
         await product.save();
-        res.json({ message: "Cập nhật sản phẩm thành công!", product });
+        res.json({ message: "Update Product Success !", product });
     } catch (error) {
         console.error(" Lỗi updateProduct:", error);
-        res.status(500).json({ message: "Cập nhật thất bại", error: error.message });
+        res.status(500).json({ message: "Update Fall", error: error.message });
     }
 };
 
@@ -108,7 +107,7 @@ export const deleteProduct = async (req, res) => {
 
         res.json({ success: true, message: "Product deleted successfully!" });
     } catch (error) {
-        console.error(" Lỗi khi xóa sản phẩm:", error);
+        console.error(" Error Delete Product", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -144,7 +143,7 @@ export const getProductsByCollection = async (req, res) => {
         const products = await Product.find({ collections: collectionName });
         res.json({ success: true, products });
     } catch (error) {
-        console.error("❌ Lỗi khi lấy sản phẩm theo collection:", error);
+        console.error(" Error product get by collections", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };

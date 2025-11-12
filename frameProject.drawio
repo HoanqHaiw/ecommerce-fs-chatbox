@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="28.2.9">
+  <diagram name="Page-1" id="cmHz6JCh0aGgH9a14-Ot">
+    <mxGraphModel dx="3442" dy="2121" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-869" y="-152" width="1592" height="1256" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-2" value="ALL&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-178" y="-131" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-3" value="ABOUT" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="578" y="-136" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-4" value="CONTACT" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="427" y="-133" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-5" value="CHECKORDER" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="273" y="-131" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-6" value="CART" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="124" y="-133" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-7" value="COLLECTIONS" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-27" y="-131" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-8" value="HOME" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-331" y="-131" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-9" value="DOANTONGOUTLET" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-780" y="-131" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-10" value="IMG" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-865" y="-22" width="1592" height="404" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-11" value="IMG" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-869" y="379" width="1592" height="404" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-12" value="LIST PRODUCT" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-601" y="867" width="1077" height="114" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-13" value="FOOTER" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-869" y="1040" width="1592" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-14" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;HOME&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="-414" y="-408" width="307" height="61" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-25" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="793" y="-47" width="1592" height="1256" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-26" value="ALL&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1481" y="-8" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-27" value="ABOUT" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2237" y="-13" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-28" value="CONTACT" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2086" y="-10" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-29" value="CHECKORDER" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1932" y="-8" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-30" value="CART" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1783" y="-10" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-31" value="COLLECTIONS" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1632" y="-8" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-32" value="HOME" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1328" y="-8" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EHlZiDxdFT9DAVAFSfLF-33" value="DOANTONGOUTLET" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="879" y="-8" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

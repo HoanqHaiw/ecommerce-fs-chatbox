@@ -8,9 +8,9 @@ const EditProduct = ({ product, onClose, onSave }) => {
         category: product.category || "",
         description: product.description || "",
         stock: product.stock || 0,
-        collections: product.collections || "", // ✅ thêm collections
+        collections: product.collections || "",
         sizes: product.sizes || [{ size: "", quantity: 0 }],
-        images: [], // ảnh mới upload
+        images: [],
     });
 
     const handleChange = (e) => {
@@ -45,7 +45,7 @@ const EditProduct = ({ product, onClose, onSave }) => {
         formData.append("category", form.category);
         formData.append("description", form.description);
         formData.append("stock", form.stock);
-        formData.append("collections", form.collections); // ✅ thêm field này
+        formData.append("collections", form.collections);
         formData.append("sizes", JSON.stringify(form.sizes));
 
         form.images.forEach((file) => {
@@ -57,25 +57,25 @@ const EditProduct = ({ product, onClose, onSave }) => {
             onSave(); // refresh list
             onClose(); // đóng modal
         } catch (error) {
-            console.error("❌ Lỗi khi cập nhật sản phẩm:", error);
+            console.error(" Error update products", error);
         }
     };
 
     return (
         <div className="modal">
             <form onSubmit={handleSubmit} encType="multipart/form-data" className="edit-product-form">
-                <h3>Cập nhật sản phẩm</h3>
+                <h3>Update Products</h3>
 
-                <label>Tên sản phẩm</label>
+                <label>Name Product</label>
                 <input type="text" name="name" value={form.name} onChange={handleChange} required />
 
-                <label>Giá</label>
+                <label>Price</label>
                 <input type="number" name="price" value={form.price} onChange={handleChange} required />
 
-                <label>Danh mục</label>
+                <label>Category</label>
                 <input type="text" name="category" value={form.category} onChange={handleChange} />
 
-                <label>Bộ sưu tập (collections)</label>
+                <label>Collections (collections)</label>
                 <select
                     name="collections"
                     value={form.collections || "No collections"}
@@ -89,22 +89,20 @@ const EditProduct = ({ product, onClose, onSave }) => {
                     <option value="New Arrivals">New Arrivals</option>
                 </select>
 
-                <label>Tồn kho</label>
+                <label>inventory</label>
                 <input type="number" name="stock" value={form.stock} onChange={handleChange} />
 
-                <label>Kích cỡ và số lượng</label>
+                <label>Size and Quantity</label>
                 {form.sizes.map((s, index) => (
                     <div key={index} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                         <input
                             type="text"
-                            placeholder="Size (vd: S, M, L)"
                             value={s.size}
                             onChange={(e) => handleSizeChange(index, "size", e.target.value)}
                             required
                         />
                         <input
                             type="number"
-                            placeholder="Số lượng"
                             value={s.quantity}
                             onChange={(e) => handleSizeChange(index, "quantity", e.target.value)}
                             required
@@ -116,7 +114,7 @@ const EditProduct = ({ product, onClose, onSave }) => {
                 ))}
                 <button type="button" onClick={addSizeRow}>+ Thêm size</button>
 
-                <label>Mô tả</label>
+                <label>Decriptions</label>
                 <textarea
                     name="description"
                     value={form.description}
@@ -124,7 +122,7 @@ const EditProduct = ({ product, onClose, onSave }) => {
                     rows="3"
                 ></textarea>
 
-                <label>Thêm ảnh mới (tối đa 3 ảnh)</label>
+                <label>Add Product Img (max 3 img)</label>
                 <input type="file" name="images" multiple accept="image/*" onChange={handleFileChange} />
 
                 <div className="current-images">
@@ -140,13 +138,13 @@ const EditProduct = ({ product, onClose, onSave }) => {
                             />
                         ))
                     ) : (
-                        <p>Chưa có ảnh</p>
+                        <p>No IMG</p>
                     )}
                 </div>
 
                 <div className="form-actions">
-                    <button type="submit" className="save-btn">Lưu thay đổi</button>
-                    <button type="button" onClick={onClose} className="cancel-btn">Hủy</button>
+                    <button type="submit" className="save-btn">Save</button>
+                    <button type="button" onClick={onClose} className="cancel-btn">Cancel</button>
                 </div>
             </form>
         </div>

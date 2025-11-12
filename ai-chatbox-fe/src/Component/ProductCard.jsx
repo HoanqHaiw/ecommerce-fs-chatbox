@@ -42,7 +42,7 @@ function ProductCard({ product }) {
                     className="btn btn-dark w-100 add-cart-btn"
                     onClick={handleAddToCart}
                 >
-                    Thêm vào giỏ hàng
+                    Add to cart
                 </button>
             </div>
         </div>

@@ -29,7 +29,7 @@ const CartSidebar = () => {
             {/* Sidebar giỏ hàng */}
             <div className={`cart-sidebar ${isSidebarOpen ? "open" : ""}`}>
                 <div className="sidebar-header">
-                    <h5>Giỏ hàng</h5>
+                    <h5>Cart</h5>
                     <button onClick={closeSidebar} className="close-btn">
                         ×
                     </button>
@@ -37,7 +37,7 @@ const CartSidebar = () => {
 
                 {/* Nếu giỏ hàng trống */}
                 {cartItems.length === 0 ? (
-                    <p className="empty">Giỏ hàng trống</p>
+                    <p className="empty">Empty Cart</p>
                 ) : (
                     <div className="sidebar-content">
                         {cartItems.map((item) => (
@@ -70,7 +70,7 @@ const CartSidebar = () => {
                                     className="remove"
                                     onClick={() => removeFromCart(item.id)}
                                 >
-                                    Xoá
+                                    Delete
                                 </button>
                             </div>
                         ))}
@@ -81,12 +81,12 @@ const CartSidebar = () => {
                 {cartItems.length > 0 && (
                     <div className="sidebar-footer">
                         <div className="subtotal d-flex justify-content-between align-items-center">
-                            <span>Tạm tính:</span>
+                            <span>Total Test :</span>
                             <strong>{formatPrice(subtotal)}</strong>
                         </div>
                         <div className="actions">
                             <Link to="/cart" onClick={closeSidebar} className="view-cart">
-                                Xem Giỏ Hàng
+                                View Cart
                             </Link>
                         </div>
                     </div>

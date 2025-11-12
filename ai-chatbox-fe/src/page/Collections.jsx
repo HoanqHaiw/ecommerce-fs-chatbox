@@ -1,51 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../Component/Navbar";
 import "../scss/collections.scss";
-
 import heroImg from "../assets/collections/hero.jpg";
-import summerImg from "../assets/collections/summer.jpg";
-import classicImg from "../assets/collections/classic.jpg";
-import bestSellerImg from "../assets/collections/bestseller.jpg";
-import newArrivalsImg from "../assets/collections/newarrivals.jpg";
 import { Link } from "react-router-dom";
+import { getCollections } from "../api/productService";
 
 const Collections = () => {
-    const collections = [
-        {
-            id: 1,
-            name: "Summer 2025",
-            description: "Gam màu tươi sáng, năng động — hoàn hảo cho những ngày nắng.",
-            image: summerImg,
-        },
-        {
-            id: 2,
-            name: "Classic Streetwear",
-            description: "Kết hợp giữa đường phố và phong cách cổ điển mang dấu ấn riêng.",
-            image: classicImg,
-        },
-        {
-            id: 3,
-            name: "Best Seller",
-            description: "Những sản phẩm được yêu thích nhất tại DOANTONG OUTLET.",
-            image: bestSellerImg,
-        },
-        {
-            id: 4,
-            name: "New Arrivals",
-            description: "Những sản phẩm mới nhất tại DOANTONG OUTLET.",
-            image: newArrivalsImg,
-        },
-    ];
+    const [collections, setCollections] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCollections = async () => {
+            try {
+                const data = await getCollections();
+                // data là array string, map thành object để giữ bố cục ảnh giả định
+                const collectionsData = data.map((name, index) => ({
+                    id: index + 1,
+                    name,
+                    description: getCollectionDescription(name),
+                    image: getCollectionImage(name),
+                }));
+                setCollections(collectionsData);
+            } catch (err) {
+                console.error("Error fetching collections:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCollections();
+    }, []);
+
+    const getCollectionDescription = (name) => {
+        const desc = {
+            "Summer 2025": "Gam màu tươi sáng, năng động — hoàn hảo cho những ngày nắng.",
+            "Classic Streetwear": "Kết hợp giữa đường phố và phong cách cổ điển mang dấu ấn riêng.",
+            "Best Seller": "Những sản phẩm được yêu thích nhất tại DOANTONG OUTLET.",
+            "New Arrivals": "Những sản phẩm mới nhất tại DOANTONG OUTLET.",
+        };
+        return desc[name] || "Khám phá bộ sưu tập độc quyền.";
+    };
+
+    const getCollectionImage = (name) => {
+        const img = {
+            "Summer 2025": require("../assets/collections/summer.jpg"),
+            "Classic Streetwear": require("../assets/collections/classic.jpg"),
+            "Best Seller": require("../assets/collections/bestseller.jpg"),
+            "New Arrivals": require("../assets/collections/newarrivals.jpg"),
+        };
+        return img[name] || heroImg;
+    };
+
+    if (loading) return <p className="loading">Đang tải bộ sưu tập...</p>;
 
     return (
         <div className="collections-page">
             <Navbar />
 
             {/* ---------- HERO BANNER ---------- */}
-            <section
-                className="hero-banner"
-                style={{ backgroundImage: `url(${heroImg})` }}
-            >
+            <section className="hero-banner" style={{ backgroundImage: `url(${heroImg})` }}>
                 <div className="overlay"></div>
                 <div className="banner-content">
                     <h1>COLLECTIONS</h1>
@@ -72,7 +84,7 @@ const Collections = () => {
                             <h3>{col.name}</h3>
                             <p>{col.description}</p>
                             <button>
-                                <Link to={`/collection/${col.id}`} className="view-btn">
+                                <Link to={`/collections/${col.name}`} className="view-btn">
                                     Xem Bộ Sưu Tập
                                 </Link>
                             </button>
