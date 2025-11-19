@@ -193,6 +193,142 @@
                 "/uploads/nike-heritage-bag-2.jpg",
                 "/uploads/nike-heritage-bag-3.jpg"
             ]
+        },
+        {
+            "name": "Nike SB Dunk Low Pro",
+            "category": "Men",
+            "price": 3600000,
+            "description": "Giày trượt ván với đệm Zoom Air, thiết kế cổ điển và độ bám tốt cho các trick phức tạp.",
+            "collections": "Classic Streetwear",
+            "stock": 18,
+            "sizes": [
+                {
+                    "size": 39,
+                    "quantity": 6
+                },
+                {
+                    "size": 40,
+                    "quantity": 6
+                },
+                {
+                    "size": 41,
+                    "quantity": 6
+                }
+            ],
+            "images": [
+                "/uploads/nike-sbdunk-1.jpg",
+                "/uploads/nike-sbdunk-2.jpg",
+                "/uploads/nike-sbdunk-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Court Legacy Lift",
+            "category": "Women",
+            "price": 2700000,
+            "description": "Thiết kế retro với đế platform nhẹ, tôn dáng và phong cách cổ điển tennis.",
+            "collections": "New Arrivals",
+            "stock": 22,
+            "sizes": [
+                {
+                    "size": 36,
+                    "quantity": 8
+                },
+                {
+                    "size": 37,
+                    "quantity": 7
+                },
+                {
+                    "size": 38,
+                    "quantity": 7
+                }
+            ],
+            "images": [
+                "/uploads/nike-court-legacy-1.jpg",
+                "/uploads/nike-court-legacy-2.jpg",
+                "/uploads/nike-court-legacy-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike React Infinity 4",
+            "category": "Men",
+            "price": 3900000,
+            "description": "Công nghệ React tiên tiến, giảm chấn thương và tối ưu hiệu suất chạy bộ.",
+            "collections": "Best Seller",
+            "stock": 28,
+            "sizes": [
+                {
+                    "size": 40,
+                    "quantity": 10
+                },
+                {
+                    "size": 42,
+                    "quantity": 10
+                },
+                {
+                    "size": 44,
+                    "quantity": 8
+                }
+            ],
+            "images": [
+                "/uploads/nike-infinity-1.jpg",
+                "/uploads/nike-infinity-2.jpg",
+                "/uploads/nike-infinity-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Air Max SC",
+            "category": "Women",
+            "price": 2400000,
+            "description": "Phong cách thể thao với công nghệ Air Max nhẹ nhàng, thoải mái cả ngày dài.",
+            "collections": "Summer 2025",
+            "stock": 32,
+            "sizes": [
+                {
+                    "size": 35,
+                    "quantity": 8
+                },
+                {
+                    "size": 37,
+                    "quantity": 12
+                },
+                {
+                    "size": 39,
+                    "quantity": 12
+                }
+            ],
+            "images": [
+                "/uploads/nike-airmax-sc-1.jpg",
+                "/uploads/nike-airmax-sc-2.jpg",
+                "/uploads/nike-airmax-sc-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Crossbody Swoosh Bag",
+            "category": "Accessories",
+            "price": 750000,
+            "description": "Túi đeo chéo với logo Swoosh nổi bật, thiết kế nhỏ gọn nhưng đựng được nhiều đồ.",
+            "collections": "New Arrivals",
+            "stock": 45,
+            "sizes": [],
+            "images": [
+                "/uploads/nike-crossbody-1.jpg",
+                "/uploads/nike-crossbody-2.jpg",
+                "/uploads/nike-crossbody-3.jpg"
+            ]
+        },
+        {
+            "name": "Nike Sportswear Cap",
+            "category": "Accessories",
+            "price": 450000,
+            "description": "Mũ lưỡi trai thể thao với chất liệu thoáng khí, điều chỉnh kích thước linh hoạt.",
+            "collections": "Summer 2025",
+            "stock": 60,
+            "sizes": [],
+            "images": [
+                "/uploads/nike-cap-1.jpg",
+                "/uploads/nike-cap-2.jpg",
+                "/uploads/nike-cap-3.jpg"
+            ]
         }
     ]
 }

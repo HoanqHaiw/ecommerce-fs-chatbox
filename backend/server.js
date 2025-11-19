@@ -9,17 +9,20 @@ import orderRoutes from "./routes/orderRoutes.js";
 import revenueRoutes from "./routes/revenueRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import userAuthRoute from "./routes/userAuth.js"; // chỉ dùng import
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join('./uploads')));
 
 // Routes
+app.use("/api/user-auth", userAuthRoute);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/revenue", revenueRoutes);

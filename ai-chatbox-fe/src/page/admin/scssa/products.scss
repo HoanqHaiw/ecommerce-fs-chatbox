@@ -88,6 +88,57 @@ table {
     }
 }
 
+/* ---------- PHÂN TRANG ---------- */
+.pagination-info {
+    margin: 15px 0;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+
+    p {
+        margin: 0;
+        padding: 8px 0;
+        background: #f8f9fa;
+        border-radius: 6px;
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 30px 0;
+    padding: 20px 0;
+
+    .pagination-btn {
+        padding: 8px 16px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+
+        &:hover:not(:disabled) {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        &.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    }
+}
+
 /* ---------- MODAL FORM (ADD / EDIT PRODUCT) ---------- */
 .modal {
     position: fixed;
@@ -174,5 +225,17 @@ table {
 
     &:hover {
         background: #e64a19;
+    }
+}
+
+/* ---------- RESPONSIVE PHÂN TRANG ---------- */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 5px;
+
+        .pagination-btn {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
     }
 }

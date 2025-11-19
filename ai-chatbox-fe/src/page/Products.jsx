@@ -10,6 +10,8 @@ const Products = () => {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("default");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [productsPerPage] = useState(8); // Thêm phân trang
 
     const navigate = useNavigate();
 
@@ -26,11 +28,11 @@ const Products = () => {
     }, []);
 
     const handleCategoryClick = (cat) => {
-        // Nếu click "Collections" thì chuyển hướng sang trang collection
         if (cat === "Collections") {
             navigate("/collections");
         } else {
             setSelectedCategory(cat);
+            setCurrentPage(1); // Reset về trang 1
         }
     };
 
@@ -45,6 +47,20 @@ const Products = () => {
             return 0;
         });
 
+    // Phân trang
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const nextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
+    const prevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, sortOption, selectedCategory]);
+
     return (
         <div className="products-page">
             <Navbar />
@@ -57,11 +73,7 @@ const Products = () => {
                                 <li
                                     key={cat}
                                     onClick={() => handleCategoryClick(cat)}
-                                    style={{
-                                        fontWeight: selectedCategory === cat ? "600" : "400",
-                                        color: selectedCategory === cat ? "#007bff" : "#111",
-                                        cursor: "pointer",
-                                    }}
+                                    className={selectedCategory === cat ? "active-category" : ""}
                                 >
                                     {cat}
                                 </li>
@@ -114,15 +126,53 @@ const Products = () => {
                         </select>
                     </div>
 
+                    {/* Thông tin phân trang */}
+                    <div className="pagination-info">
+                        <p>
+                            Showing {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, filteredProducts.length)} of {filteredProducts.length} products
+                        </p>
+                    </div>
+
                     <div className="product-grid">
-                        {filteredProducts.length > 0 ? (
-                            filteredProducts.map((p) => (
+                        {currentProducts.length > 0 ? (
+                            currentProducts.map((p) => (
                                 <ProductCard key={p._id} product={p} />
                             ))
                         ) : (
                             <p>No products found.</p>
                         )}
                     </div>
+
+                    {/* Phân trang */}
+                    {totalPages > 1 && (
+                        <div className="pagination">
+                            <button
+                                onClick={prevPage}
+                                disabled={currentPage === 1}
+                                className="pagination-btn"
+                            >
+                                ← Previous
+                            </button>
+
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+                                <button
+                                    key={number}
+                                    onClick={() => paginate(number)}
+                                    className={`pagination-btn ${currentPage === number ? 'active' : ''}`}
+                                >
+                                    {number}
+                                </button>
+                            ))}
+
+                            <button
+                                onClick={nextPage}
+                                disabled={currentPage === totalPages}
+                                className="pagination-btn"
+                            >
+                                Next →
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

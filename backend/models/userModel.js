@@ -1,15 +1,11 @@
+// backend/models/User.js
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
-    {
-        name: { type: String, required: true },
-        email: { type: String, unique: true },
-        phone: { type: String },
-        isVIP: { type: Boolean, default: false },
-        totalSpent: { type: Number, default: 0 },
-    },
-    { timestamps: true }
-);
+const UserSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    password: { type: String, required: true },
+    phone: { type: String, trim: true },
+}, { timestamps: true });
 
-const User = mongoose.model("User", userSchema);
-export default User;
+export default mongoose.models.User || mongoose.model("User", UserSchema);

@@ -50,8 +50,10 @@ export const deleteProduct = async (id) => {
 export const getCollections = async () => {
     try {
         const products = await getProducts();
-        // lấy tất cả collections và loại trùng lặp
-        const collections = [...new Set(products.map(p => p.collections))];
+        const allCollections = products.flatMap(p =>
+            Array.isArray(p.collections) ? p.collections : [p.collections]
+        );
+        const collections = [...new Set(allCollections.filter(Boolean))];
         return collections;
     } catch (error) {
         console.error("Error get collections", error);
@@ -63,7 +65,12 @@ export const getCollections = async () => {
 export const getProductsByCollection = async (collectionName) => {
     try {
         const res = await axios.get(`${API_URL}/collection/${collectionName}`);
-        return res.data.products || [];
+        const products = res.data.products || [];
+        const uniqueProducts = products.filter((product, index, self) =>
+            index === self.findIndex(p => p._id === product._id)
+        );
+
+        return uniqueProducts;
     } catch (error) {
         console.error("Error get products by collection", error);
         return [];

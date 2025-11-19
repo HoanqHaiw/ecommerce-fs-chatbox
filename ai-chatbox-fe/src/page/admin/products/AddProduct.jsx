@@ -21,7 +21,7 @@ const AddProduct = ({ onClose, onSave }) => {
         setProduct({ ...product, images: e.target.files });
     };
 
-    // 🧩 Quản lý kích cỡ và số lượng
+    //  Quản lý kích cỡ và số lượng
     const handleSizeChange = (index, field, value) => {
         const updatedSizes = [...product.sizes];
         updatedSizes[index][field] = value;

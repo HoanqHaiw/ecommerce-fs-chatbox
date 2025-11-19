@@ -13,10 +13,10 @@ export const createProduct = async (req, res) => {
             });
         }
 
-        // Lưu đường dẫn ảnh
+
         const imagePaths = req.files?.map((file) => `/uploads/${file.filename}`) || [];
 
-        // Xử lý sizes
+
         let formattedSizes = [];
         if (sizes) {
             try {
@@ -67,7 +67,7 @@ export const updateProduct = async (req, res) => {
         product.collections = collections;
         product.sizes = parsedSizes;
 
-        // Nếu có ảnh mới thì thay thế
+
         if (req.files && req.files.length > 0) {
             // Xóa ảnh cũ
             product.images.forEach((img) => {

@@ -10,7 +10,7 @@ connectDB();
 const importData = async () => {
     try {
         const data = JSON.parse(fs.readFileSync("./data/products.json", "utf-8"));
-        await Product.deleteMany();
+        // await Product.deleteMany();
         await Product.insertMany(data.products);
         console.log("✅ Import thành công!");
         process.exit();
@@ -19,5 +19,5 @@ const importData = async () => {
         process.exit(1);
     }
 };
-
+// node seeder.js 
 importData();

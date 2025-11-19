@@ -201,6 +201,55 @@
     }
 }
 
+/* ---------- PHÂN TRANG ---------- */
+.pagination-info {
+    margin: 15px 0 25px 0;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+
+    p {
+        margin: 0;
+        padding: 8px 0;
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    padding: 20px 0;
+
+    .pagination-btn {
+        padding: 8px 16px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+
+        &:hover:not(:disabled) {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        &.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    }
+}
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 1400px) {
     .product-grid {
@@ -230,10 +279,28 @@
     .product-grid {
         grid-template-columns: repeat(2, minmax(180px, 1fr));
     }
+
+    .pagination {
+        gap: 5px;
+
+        .pagination-btn {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+    }
 }
 
 @media (max-width: 576px) {
     .product-grid {
         grid-template-columns: 1fr;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+
+        .pagination-btn {
+            flex: 1;
+            min-width: 60px;
+        }
     }
 }

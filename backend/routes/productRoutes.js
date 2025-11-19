@@ -21,22 +21,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Lấy tất cả products
+
 router.get("/", getAllProducts);
-
-// Lấy product theo id
 router.get("/:id", getProductById);
-
-// Lấy product theo collection (collectionName = string)
 router.get("/collection/:collectionName", getProductsByCollection);
-
-// Tạo product
 router.post("/", upload.array("images", 3), createProduct);
-
-// Cập nhật product
 router.put("/:id", upload.array("images", 3), updateProduct);
-
-// Xóa product
 router.delete("/:id", deleteProduct);
 
 export default router;

@@ -8,6 +8,8 @@ const ManageProducts = () => {
     const [products, setProducts] = useState([]);
     const [isAdding, setIsAdding] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [productsPerPage] = useState(10); // 10 sản phẩm mỗi trang
 
     useEffect(() => {
         loadProducts();
@@ -29,6 +31,21 @@ const ManageProducts = () => {
         }
     };
 
+    // Tính toán phân trang
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+    const totalPages = Math.ceil(products.length / productsPerPage);
+
+    // Chuyển trang
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const nextPage = () => {
+        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    };
+    const prevPage = () => {
+        if (currentPage > 1) setCurrentPage(currentPage - 1);
+    };
+
     return (
         <div className="admin-container">
             <div className="admin-header">
@@ -48,6 +65,13 @@ const ManageProducts = () => {
                 />
             )}
 
+            {/* Thông tin phân trang */}
+            <div className="pagination-info">
+                <p>
+                    Showing {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, products.length)} of {products.length} products
+                </p>
+            </div>
+
             <table className="admin-table">
                 <thead>
                     <tr>
@@ -63,10 +87,9 @@ const ManageProducts = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {products.length > 0 ? (
-                        products.map((p) => (
+                    {currentProducts.length > 0 ? (
+                        currentProducts.map((p) => (
                             <tr key={p._id}>
-                                {/* Hiển thị ID MongoDB */}
                                 <td>{p._id}</td>
                                 <td>{p.name}</td>
                                 <td>{p.price?.toLocaleString()} đ</td>
@@ -113,6 +136,37 @@ const ManageProducts = () => {
                     )}
                 </tbody>
             </table>
+
+            {/* Phân trang */}
+            {totalPages > 1 && (
+                <div className="pagination">
+                    <button
+                        onClick={prevPage}
+                        disabled={currentPage === 1}
+                        className="pagination-btn"
+                    >
+                        ← Previous
+                    </button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+                        <button
+                            key={number}
+                            onClick={() => paginate(number)}
+                            className={`pagination-btn ${currentPage === number ? 'active' : ''}`}
+                        >
+                            {number}
+                        </button>
+                    ))}
+
+                    <button
+                        onClick={nextPage}
+                        disabled={currentPage === totalPages}
+                        className="pagination-btn"
+                    >
+                        Next →
+                    </button>
+                </div>
+            )}
 
             <div>
                 <button className="back-home" onClick={() => window.history.back()}>

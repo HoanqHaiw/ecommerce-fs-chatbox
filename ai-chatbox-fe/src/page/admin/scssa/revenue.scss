@@ -1,124 +1,225 @@
-/* ---------- REVENUE PAGE (ManageRevenue.js) ---------- */
+// Thêm vào file admin.scss hoặc tạo revenue.scss
 
-.admin-page {
-    padding: 20px;
-    background-color: #f8f8f8;
-    min-height: 100vh;
+.revenue-filter {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
-    h2 {
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 20px;
+    .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        label {
+            font-weight: 600;
+            color: #2d3748;
+            min-width: 80px;
+        }
+
+        input {
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+
+            &:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+        }
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 1rem;
+
+        .filter-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            }
+        }
+
+        .reset-btn {
+            background: #718096;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: #4a5568;
+                transform: translateY(-2px);
+            }
+        }
     }
 }
 
-/* ---------- FILTER ---------- */
-.filter-section {
-    // display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 30px;
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 
-    label {
-        font-weight: 500;
-    }
-
-    input,
-    select {
-        padding: 6px 10px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        outline: none;
-    }
-
-    button {
-        background: #007bff;
-        color: #fff;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: 0.3s;
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s ease;
 
         &:hover {
-            background: #0056b3;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        &.primary {
+            border-left: 4px solid #667eea;
+        }
+
+        &.success {
+            border-left: 4px solid #48bb78;
+        }
+
+        &.warning {
+            border-left: 4px solid #ed8936;
+        }
+
+        &.info {
+            border-left: 4px solid #4299e1;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .stat-content {
+            flex: 1;
+
+            h3 {
+                margin: 0 0 0.5rem 0;
+                font-size: 0.9rem;
+                color: #718096;
+                font-weight: 600;
+            }
+
+            .stat-number {
+                margin: 0;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #2d3748;
+            }
+
+            small {
+                color: #a0aec0;
+                font-size: 0.8rem;
+            }
         }
     }
 }
 
-/* ---------- SUMMARY CARDS ---------- */
-.summary {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 30px;
+.chart-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
 
-    .card {
-        background: #fff;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    h3 {
+        margin-bottom: 1.5rem;
+        color: #2d3748;
+        font-size: 1.3rem;
+    }
 
-        h4 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
+    .chart-container {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+    }
+}
 
+.revenue-table-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    h3 {
+        margin-bottom: 1.5rem;
+        color: #2d3748;
+        font-size: 1.3rem;
+    }
+}
+
+.no-data {
+    text-align: center;
+    padding: 3rem !important;
+
+    .empty-state {
         p {
-            font-size: 16px;
-            color: #333;
+            font-size: 1.1rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+
+        small {
+            color: #a0aec0;
         }
     }
 }
 
-/* ---------- CHART ---------- */
-.chart-container {
-    background: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+// Responsive
+@media (max-width: 768px) {
+    .revenue-filter {
+        .filter-group {
+            flex-direction: column;
+            align-items: flex-start;
 
-/* ---------- TABLE ---------- */
-.revenue-table {
-    width: 100%;
-    margin-top: 25px;
-    background: #fff;
-    border-radius: 10px;
-    padding: 10px;
-    border-collapse: collapse;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            label {
+                margin-bottom: 0.5rem;
+            }
+        }
 
-    th,
-    td {
-        padding: 10px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
+        .filter-actions {
+            flex-direction: column;
+        }
     }
 
-    th {
-        background-color: #f3f3f3;
-        font-weight: 600;
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
 
-    tr:hover {
-        background-color: #fafafa;
-    }
-}
-
-/* ---------- BACK BUTTON ---------- */
-.back-home {
-    margin-top: 20px;
-    padding: 8px 14px;
-    background: #ff5722;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-
-    &:hover {
-        background: #e64a19;
+    .chart-section,
+    .revenue-table-section {
+        padding: 1rem;
     }
 }

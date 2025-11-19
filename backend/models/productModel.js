@@ -11,10 +11,10 @@ const productSchema = new mongoose.Schema(
         price: { type: Number, required: true },
         description: { type: String },
         category: { type: String, required: true },
-        collections: { type: String, required: true }, // 🔹 field bắt buộc backend
+        collections: { type: String, required: true },
         stock: { type: Number, default: 0 },
         sizes: [sizeSchema],
-        images: [String], // đường dẫn lưu ảnh
+        images: [String],
     },
     { timestamps: true }
 );

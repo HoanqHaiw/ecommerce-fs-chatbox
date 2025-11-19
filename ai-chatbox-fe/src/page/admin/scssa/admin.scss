@@ -1,198 +1,598 @@
-.admin-login {
+// scss/admin.scss
+
+// Biến màu sắc
+$primary-color: #667eea;
+$primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$success-color: #48bb78;
+$warning-color: #ed8936;
+$danger-color: #f56565;
+$info-color: #4299e1;
+$dark-color: #2d3748;
+$gray-color: #718096;
+$light-gray: #a0aec0;
+$bg-color: #f8fafc;
+
+// Mixins
+@mixin glass-effect {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@mixin card-shadow {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+@mixin hover-effect {
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+}
+
+// Layout chính
+.admin-layout {
     display: flex;
-    justify-content: center;
+    min-height: 100vh;
+    background: $bg-color;
+
+    .admin-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-left: 250px; // Chiều rộng sidebar
+
+        .dashboard-main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+    }
+}
+
+// Header Dashboard
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    height: 100vh;
-    background: #111;
+    margin-bottom: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
 
-    .login-box {
-        background: #222;
-        padding: 40px;
-        border-radius: 10px;
-        color: #fff;
-        width: 350px;
-        text-align: center;
+    h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: $primary-gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+    }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
+    .refresh-btn {
+        background: $primary-gradient;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        @include hover-effect;
+
+        &:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+    }
+}
+
+// Stats Grid
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+
+    .stat-card {
+        @include glass-effect;
+        @include card-shadow;
+        padding: 2rem;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        @include hover-effect;
+
+        // Border colors based on type
+        &.primary {
+            border-left: 6px solid $primary-color;
         }
 
-        button {
-            width: 100%;
-            background: #007bff;
-            border: none;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
+        &.success {
+            border-left: 6px solid $success-color;
+        }
 
-            &:hover {
-                background: #0056b3;
+        &.warning {
+            border-left: 6px solid $warning-color;
+        }
+
+        &.danger {
+            border-left: 6px solid $danger-color;
+        }
+
+        &.info {
+            border-left: 6px solid $info-color;
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            font-size: 2rem;
+            flex-shrink: 0;
+
+            // Background colors based on type
+            .primary & {
+                background: rgba(102, 126, 234, 0.1);
+            }
+
+            .success & {
+                background: rgba(72, 187, 120, 0.1);
+            }
+
+            .warning & {
+                background: rgba(237, 137, 54, 0.1);
+            }
+
+            .danger & {
+                background: rgba(245, 101, 101, 0.1);
+            }
+
+            .info & {
+                background: rgba(66, 153, 225, 0.1);
             }
         }
 
-        .error {
-            color: #ff6b6b;
-            font-size: 14px;
+        .stat-content {
+            flex: 1;
+
+            h3 {
+                margin: 0 0 0.5rem 0;
+                font-size: 1rem;
+                color: $gray-color;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .stat-number {
+                margin: 0 0 0.25rem 0;
+                font-size: 2.2rem;
+                font-weight: 800;
+                color: $dark-color;
+                line-height: 1;
+            }
+
+            small {
+                color: $light-gray;
+                font-size: 0.85rem;
+                font-weight: 500;
+            }
         }
     }
 }
 
-.admin-layout {
-    display: flex;
-    height: 100vh;
-    background: #f4f4f4;
+// Dashboard Sections
+.dashboard-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: 1200px) {
+        grid-template-columns: 1fr;
+    }
 }
 
-.admin-sidebar {
-    width: 220px;
-    background: #222;
-    color: #fff;
-    padding: 20px;
+.recent-section {
+    @include glass-effect;
+    @include card-shadow;
+    border-radius: 20px;
+    overflow: hidden;
 
-    h2 {
-        margin-bottom: 20px;
-        text-align: center;
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 2rem;
+        background: $primary-gradient;
+        color: white;
+
+        h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .view-all-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateX(4px);
+            }
+        }
+    }
+}
+
+// Table Styles
+.table-container {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+        background: rgba(248, 250, 252, 0.8);
+
+        th {
+            padding: 1.25rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: $gray-color;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+        }
     }
 
-    ul {
-        list-style: none;
-        padding: 0;
+    tbody {
+        tr {
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            transition: all 0.3s ease;
 
-        li {
-            margin: 15px 0;
+            &:hover {
+                background: rgba(102, 126, 234, 0.03);
+            }
 
-            a {
-                color: #ccc;
-                text-decoration: none;
+            &:last-child {
+                border-bottom: none;
+            }
 
-                &:hover {
-                    color: #fff;
+            td {
+                padding: 1.25rem 1rem;
+                vertical-align: top;
+
+                &.order-id {
+                    font-family: 'Courier New', monospace;
+                    font-weight: 700;
+                    color: $primary-color;
+                    font-size: 0.9rem;
+                }
+
+                &.total-amount {
+                    font-weight: 700;
+                    color: $dark-color;
+                    font-size: 1.1rem;
+                }
+
+                &.order-date {
+                    color: $gray-color;
+                    font-size: 0.9rem;
+                    white-space: nowrap;
+                }
+
+                &.email-info {
+                    color: $primary-color;
+                    font-size: 0.9rem;
+                    word-break: break-all;
+                }
+
+                .customer-info,
+                .user-info {
+                    strong {
+                        display: block;
+                        color: $dark-color;
+                        font-size: 0.95rem;
+                        margin-bottom: 0.25rem;
+                    }
+
+                    small {
+                        color: $gray-color;
+                        font-size: 0.8rem;
+                    }
                 }
             }
         }
     }
 }
 
-.admin-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+// Status Badges
+.status-badge {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 
-    .admin-header {
-        background: #fff;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    &.status-warning {
+        background: rgba(237, 137, 54, 0.1);
+        color: #c05621;
+        border: 1px solid rgba(237, 137, 54, 0.2);
     }
 
-    .dashboard-main {
-        padding: 20px;
+    &.status-info {
+        background: rgba(66, 153, 225, 0.1);
+        color: #2b6cb0;
+        border: 1px solid rgba(66, 153, 225, 0.2);
+    }
 
-        .stats {
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
+    &.status-primary {
+        background: rgba(102, 126, 234, 0.1);
+        color: #5a67d8;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
 
-            .card {
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                flex: 1;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    &.status-success {
+        background: rgba(72, 187, 120, 0.1);
+        color: #2f855a;
+        border: 1px solid rgba(72, 187, 120, 0.2);
+    }
+
+    &.status-danger {
+        background: rgba(245, 101, 101, 0.1);
+        color: #c53030;
+        border: 1px solid rgba(245, 101, 101, 0.2);
+    }
+
+    &.status-secondary {
+        background: rgba(160, 174, 192, 0.1);
+        color: #4a5568;
+        border: 1px solid rgba(160, 174, 192, 0.2);
+    }
+}
+
+// Empty States
+.no-data {
+    text-align: center;
+    padding: 3rem !important;
+
+    .empty-state {
+        p {
+            font-size: 1.1rem;
+            color: $gray-color;
+            margin-bottom: 0.5rem;
+        }
+
+        small {
+            color: $light-gray;
+            font-size: 0.9rem;
+        }
+    }
+}
+
+// Loading Spinner
+.loading-spinner {
+    text-align: center;
+    padding: 4rem;
+    @include glass-effect;
+    border-radius: 20px;
+
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid $primary-color;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1.5rem;
+    }
+
+    p {
+        color: $gray-color;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+// Error Message
+.error-message {
+    @include glass-effect;
+    background: rgba(245, 101, 101, 0.1);
+    color: #c53030;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border-left: 4px solid $danger-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+        background: $danger-color;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: darken($danger-color, 10%);
+        }
+    }
+}
+
+// Success Message (nếu cần)
+.success-message {
+    @include glass-effect;
+    background: rgba(72, 187, 120, 0.1);
+    color: #2f855a;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border-left: 4px solid $success-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    .admin-layout {
+        .admin-content {
+            margin-left: 0;
+
+            .dashboard-main {
+                padding: 1rem;
             }
         }
     }
-}
 
-/* ---------- MANAGE PRODUCTS ---------- */
-.admin-page {
-    padding: 30px;
-    background: #f9f9f9;
-    min-height: 100vh;
-}
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
 
-.admin-title {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 25px;
-}
-
-.admin-search {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-
-    input {
-        flex: 1;
-        max-width: 400px;
-        padding: 10px 15px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
+        h1 {
+            font-size: 1.8rem;
+        }
     }
 
-    .btn-add {
-        background: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px 18px;
-        border-radius: 5px;
-        margin-left: 15px;
-        cursor: pointer;
-        font-weight: 600;
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
 
-        &:hover {
-            background: #0056b3;
+        .stat-card {
+            padding: 1.5rem;
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+
+            .stat-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .stat-content {
+                .stat-number {
+                    font-size: 1.8rem;
+                }
+            }
+        }
+    }
+
+    .dashboard-sections {
+        gap: 1rem;
+    }
+
+    .recent-section {
+        .section-header {
+            padding: 1rem 1.5rem;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+
+            h3 {
+                font-size: 1.1rem;
+            }
+        }
+    }
+
+    .admin-table {
+
+        thead th,
+        tbody td {
+            padding: 1rem 0.75rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    .table-container {
+        overflow-x: auto;
+
+        .admin-table {
+            min-width: 600px;
         }
     }
 }
 
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-
-    th,
-    td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #eee;
-        text-align: left;
+// Animation cho cards
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
 
-    th {
-        background: #111;
-        color: #fff;
-        font-weight: 600;
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stats-grid .stat-card,
+.recent-section {
+    animation: fadeInUp 0.6s ease;
+}
+
+// Custom scrollbar
+.dashboard-main::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dashboard-main::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.dashboard-main::-webkit-scrollbar-thumb {
+    background: $primary-gradient;
+    border-radius: 10px;
+}
+
+.dashboard-main::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+// Print styles
+@media print {
+    .admin-layout {
+        background: white;
     }
 
-    tr:hover td {
-        background: #f2f2f2;
+    .dashboard-header .refresh-btn,
+    .section-header .view-all-btn {
+        display: none;
     }
 
-    .btn-edit,
-    .btn-delete {
-        border: none;
-        padding: 6px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        color: #fff;
-        margin-right: 5px;
-    }
-
-    .btn-edit {
-        background: #ffc107;
-    }
-
-    .btn-delete {
-        background: #dc3545;
+    .stat-card {
+        break-inside: avoid;
     }
 }

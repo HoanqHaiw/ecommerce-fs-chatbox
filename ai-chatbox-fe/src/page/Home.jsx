@@ -12,9 +12,9 @@ const Home = () => {
     const [products, setProducts] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemsPerPage = 4;
-    const BASE_URL = "http://localhost:5000"; // backend server
+    const BASE_URL = "http://localhost:5000";
 
-    // 👉 Lấy dữ liệu sản phẩm từ backend
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -27,7 +27,6 @@ const Home = () => {
         fetchProducts();
     }, []);
 
-    // 👉 Tự động chuyển nhóm sản phẩm sau 5s
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prev) =>

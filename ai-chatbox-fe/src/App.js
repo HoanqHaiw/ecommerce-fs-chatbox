@@ -14,6 +14,8 @@ import PhoneRing from "./Component/PhoneRing";
 import ChatBox from "./Component/Chatbox";
 import Collections from "./page/Collections";
 import CollectionDetail from "./page/CollectionDetail";
+import Register from "./page/Register";
+import Login from "./page/Login";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,6 +44,8 @@ function App() {
                 <Route path="/collections/:id" element={<CollectionDetail />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
               </Routes>
             </div>
           </main>

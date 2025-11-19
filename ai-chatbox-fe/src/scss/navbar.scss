@@ -15,10 +15,41 @@
 .navbar .nav-link {
     color: #ccc !important;
     transition: color 0.2s;
+
+    &:hover {
+        color: #fff !important;
+    }
 }
 
-.navbar .nav-link:hover {
-    color: #fff !important;
+/* Dropdown trigger */
+.navbar .dropdown-toggle {
+    cursor: pointer;
+
+    &::after {
+        margin-left: 0.5rem;
+    }
+}
+
+/* Bootstrap dropdown custom */
+.dropdown-menu {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    border-radius: 6px !important;
+    padding: 8px 0 !important;
+    min-width: 160px;
+
+
+    .dropdown-item {
+        color: #ddd !important;
+        padding: 11px 19px !important;
+        transition: all 0.2s ease;
+        font-size: 20px;
+
+        &:hover {
+            background: #444 !important;
+            color: #fff !important;
+        }
+    }
 }
 
 .container-fluid {
@@ -32,7 +63,6 @@
 
 .container {
     max-width: 1400px;
-    /* 👈 khớp 100% với phần trên */
     margin: 0 auto;
     padding: 0 30px;
 }

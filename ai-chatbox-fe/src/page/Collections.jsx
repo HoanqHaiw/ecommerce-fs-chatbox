@@ -13,7 +13,6 @@ const Collections = () => {
         const fetchCollections = async () => {
             try {
                 const data = await getCollections();
-                // data là array string, map thành object để giữ bố cục ảnh giả định
                 const collectionsData = data.map((name, index) => ({
                     id: index + 1,
                     name,

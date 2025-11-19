@@ -11,6 +11,9 @@ const Cart = () => {
     const navigate = useNavigate();
     const { cartItems, decreaseQuantity, addToCart, removeFromCart, subtotal, clearCart } = useCart();
 
+    // Kiểm tra đăng nhập
+    const [user, setUser] = useState(null);
+
     // Địa chỉ
     const [cities, setCities] = useState([]);
     const [districts, setDistricts] = useState([]);
@@ -38,11 +41,21 @@ const Cart = () => {
     const [discountPercent, setDiscountPercent] = useState(0);
 
     useEffect(() => {
+        // Load user info từ localStorage
+        const userInfo = localStorage.getItem("userInfo");
+        if (userInfo) {
+            setUser(JSON.parse(userInfo));
+            const userData = JSON.parse(userInfo);
+            setName(userData.username || "");
+        }
+
         setCities(Object.values(citiesData));
     }, []);
 
     // Xử lý chọn địa chỉ
     const handleCityChange = (e) => {
+        if (!user) return;
+
         const code = e.target.value;
         setSelectedCity(code);
         setSelectedDistrict("");
@@ -59,6 +72,8 @@ const Cart = () => {
     };
 
     const handleDistrictChange = (e) => {
+        if (!user) return;
+
         const code = e.target.value;
         setSelectedDistrict(code);
         setSelectedWard("");
@@ -73,12 +88,13 @@ const Cart = () => {
     };
 
     const handleWardChange = (e) => {
-        const code = e.target.value;
-        setSelectedWard(code);
+        if (!user) return;
+        setSelectedWard(e.target.value);
     };
 
-    // SĐT
     const handlePhoneChange = (e) => {
+        if (!user) return;
+
         const value = e.target.value.replace(/\D/g, "");
         setPhone(value);
         if (value.length !== 10) {
@@ -88,7 +104,7 @@ const Cart = () => {
         }
     };
 
-    // QR logo
+
     const getQRImage = () => {
         if (onlineMethod === "Momo")
             return "https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png";
@@ -99,8 +115,13 @@ const Cart = () => {
         return "";
     };
 
-    // Áp dụng mã giảm giá
+
     const handleApplyDiscount = () => {
+        if (!user) {
+            setMessage({ type: "error", text: "Bạn cần đăng nhập để sử dụng mã giảm giá!" });
+            return;
+        }
+
         const found = discountData.find(
             (d) => d.code.toUpperCase() === discountCode.trim().toUpperCase()
         );
@@ -113,57 +134,99 @@ const Cart = () => {
         }
     };
 
-    // 🧾 Thanh toán
+
+    const handleLoginToCheckout = () => {
+        setMessage({ type: "info", text: "Đang chuyển hướng đến trang đăng nhập..." });
+        setTimeout(() => {
+            navigate("/login");
+        }, 1000);
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (phoneError || phone.length !== 10) {
-            setMessage({ type: "error", text: "Vui lòng nhập đúng số điện thoại!" });
+        // Validation
+        if (!name || !phone || phone.length !== 10) {
+            setMessage({ type: "error", text: "Vui lòng nhập đầy đủ thông tin và số điện thoại hợp lệ" });
             return;
         }
 
-        if (!selectedCity || !selectedDistrict || !selectedWard) {
-            setMessage({ type: "error", text: "Vui lòng chọn đầy đủ địa chỉ!" });
-            return;
-        }
-
-        if (paymentMethod === "online" && !onlineMethod) {
-            setMessage({ type: "error", text: "Vui lòng chọn ví điện tử!" });
-            return;
-        }
-
-        if (paymentMethod === "online" && !showQR) {
-            setShowQR(true);
+        if (!selectedCity || !selectedDistrict || !selectedWard || !specificAddress) {
+            setMessage({ type: "error", text: "Vui lòng nhập đầy đủ địa chỉ giao hàng" });
             return;
         }
 
         const finalTotal = subtotal - (subtotal * discountPercent) / 100;
 
         try {
+
             const orderData = {
-                name: name || "Khách hàng",
+                customerName: name,
+                phone: phone,
+                email: user?.email || "",
+                address: {
+                    city: cities.find(c => c.code === selectedCity)?.name,
+                    district: districts.find(d => d.code === selectedDistrict)?.name,
+                    ward: wards.find(w => w.code === selectedWard)?.name,
+                    specific: specificAddress
+                },
+                items: cartItems.map(item => ({
+                    productId: item.id || item._id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    image: item.image,
+                    size: item.size,
+                    color: item.color
+                })),
+                subtotal: subtotal,
+                discount: discountPercent,
                 total: finalTotal,
-                status: "pending",
+                paymentMethod: paymentMethod
             };
 
-            // Gửi đơn hàng lên backend
+            console.log("=== FRONTEND: Sending SIMPLE order data ===");
+            console.log("Order data:", orderData);
+
+            // Gửi đơn hàng
             const res = await fetch("http://localhost:5000/api/orders", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(orderData),
             });
 
-            if (!res.ok) throw new Error("Lỗi khi tạo đơn hàng");
+            console.log("Response status:", res.status);
 
-            // Xoá giỏ hàng sau khi thanh toán
+            if (!res.ok) {
+                const errorText = await res.text();
+                console.log("Error response:", errorText);
+                throw new Error(`Lỗi khi tạo đơn hàng: ${res.status} - ${errorText}`);
+            }
+
+            const result = await res.json();
+            console.log(" Order created successfully:", result);
+
+            // Xóa giỏ hàng
             clearCart();
             localStorage.removeItem("cartItems");
 
-            setMessage({ type: "success", text: "✅ Thanh toán thành công!" });
-            setTimeout(() => navigate("/"), 2000);
+            setMessage({
+                type: "success",
+                text: ` Đặt hàng thành công! Mã đơn: ${result.order._id}`
+            });
+
+            // Chuyển hướng sau 2 giây
+            setTimeout(() => {
+                navigate("/check-order");
+            }, 2000);
+
         } catch (error) {
-            console.error("Lỗi khi tạo đơn hàng:", error);
-            setMessage({ type: "error", text: "Đã xảy ra lỗi khi tạo đơn hàng!" });
+            console.error(" Lỗi khi tạo đơn hàng:", error);
+            setMessage({
+                type: "error",
+                text: error.message
+            });
         }
     };
 
@@ -172,11 +235,27 @@ const Cart = () => {
     return (
         <div className="cart-page container py-5 position-relative">
             <div className="row">
-                {/* 🛒 Giỏ hàng */}
+                {/*  Giỏ hàng */}
                 <div className="col-md-7">
-                    <h4>Giỏ hàng của bạn</h4>
+                    <div className="d-flex align-items-center mb-3">
+                        <h4 className="mb-0">Giỏ hàng của bạn</h4>
+                        {user && (
+                            <span className="badge bg-primary ms-2">
+                                {user.username}
+                            </span>
+                        )}
+                    </div>
+
                     {cartItems.length === 0 ? (
-                        <p>Giỏ hàng trống</p>
+                        <div className="text-center py-5">
+                            <p className="text-muted">Giỏ hàng của bạn đang trống</p>
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => navigate("/products")}
+                            >
+                                Tiếp tục mua sắm
+                            </button>
+                        </div>
                     ) : (
                         cartItems.map((item) => (
                             <div key={item.id} className="cart-item d-flex align-items-center border-bottom py-3">
@@ -219,10 +298,20 @@ const Cart = () => {
                     )}
                 </div>
 
-                {/* 🧾 Form thanh toán */}
+                {/*  Form thanh toán */}
                 <div className="col-md-5">
                     <h4>Thông tin thanh toán</h4>
+
+                    {/* Thông báo trạng thái đăng nhập */}
+                    {!user && (
+                        <div className="alert alert-info mb-3">
+                            <i className="fas fa-info-circle me-2"></i>
+                            Vui lòng đăng nhập để hoàn tất thanh toán
+                        </div>
+                    )}
+
                     <form onSubmit={handleSubmit}>
+                        {/* Tất cả input đều bị disabled nếu chưa đăng nhập */}
                         <div className="mb-3">
                             <label>Họ tên</label>
                             <input
@@ -231,6 +320,8 @@ const Cart = () => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
+                                disabled={!user}
+                                placeholder={!user ? "Vui lòng đăng nhập..." : ""}
                             />
                         </div>
 
@@ -242,6 +333,7 @@ const Cart = () => {
                                 value={selectedCity}
                                 onChange={handleCityChange}
                                 required
+                                disabled={!user}
                             >
                                 <option value="">-- Chọn Tỉnh/Thành phố --</option>
                                 {cities.map((city) => (
@@ -260,6 +352,7 @@ const Cart = () => {
                                     value={selectedDistrict}
                                     onChange={handleDistrictChange}
                                     required
+                                    disabled={!user}
                                 >
                                     <option value="">-- Chọn Quận/Huyện --</option>
                                     {districts.map((district) => (
@@ -279,6 +372,7 @@ const Cart = () => {
                                     value={selectedWard}
                                     onChange={handleWardChange}
                                     required
+                                    disabled={!user}
                                 >
                                     <option value="">-- Chọn Phường/Xã --</option>
                                     {wards.map((ward) => (
@@ -298,6 +392,8 @@ const Cart = () => {
                                 value={specificAddress}
                                 onChange={(e) => setSpecificAddress(e.target.value)}
                                 required
+                                disabled={!user}
+                                placeholder={!user ? "Vui lòng đăng nhập..." : ""}
                             />
                         </div>
 
@@ -309,16 +405,24 @@ const Cart = () => {
                                 value={phone}
                                 onChange={handlePhoneChange}
                                 required
+                                disabled={!user}
+                                placeholder={!user ? "Vui lòng đăng nhập..." : ""}
                             />
                             {phoneError && <small className="text-danger">{phoneError}</small>}
                         </div>
 
                         <div className="mb-3">
                             <label>Email</label>
-                            <input type="email" className="form-control" required />
+                            <input
+                                type="email"
+                                className="form-control"
+                                required
+                                disabled={!user}
+                                placeholder={!user ? "Vui lòng đăng nhập..." : ""}
+                            />
                         </div>
 
-                        {/* 💳 Thanh toán */}
+                        {/*  Thanh toán */}
                         <div className="mb-3">
                             <label>Phương thức thanh toán</label>
                             <div className="form-check">
@@ -329,9 +433,11 @@ const Cart = () => {
                                     value="cod"
                                     checked={paymentMethod === "cod"}
                                     onChange={() => {
+                                        if (!user) return;
                                         setPaymentMethod("cod");
                                         setShowQR(false);
                                     }}
+                                    disabled={!user}
                                 />
                                 <label className="form-check-label">Thanh toán khi nhận hàng</label>
                             </div>
@@ -342,7 +448,11 @@ const Cart = () => {
                                     name="payment"
                                     value="online"
                                     checked={paymentMethod === "online"}
-                                    onChange={() => setPaymentMethod("online")}
+                                    onChange={() => {
+                                        if (!user) return;
+                                        setPaymentMethod("online");
+                                    }}
+                                    disabled={!user}
                                 />
                                 <label className="form-check-label">Thanh toán online</label>
                             </div>
@@ -355,6 +465,7 @@ const Cart = () => {
                                     className="form-select"
                                     value={onlineMethod}
                                     onChange={(e) => setOnlineMethod(e.target.value)}
+                                    disabled={!user}
                                 >
                                     <option value="">-- Chọn ví --</option>
                                     <option value="Momo">Momo</option>
@@ -377,29 +488,30 @@ const Cart = () => {
                             </div>
                         )}
 
-                        {/* 🎟️ Mã giảm giá */}
+                        {/*  Mã giảm giá */}
                         <div className="mb-3 d-flex align-items-center">
                             <input
                                 type="text"
                                 className="form-control me-2"
-                                placeholder="Nhập mã giảm giá"
+                                placeholder={!user ? "Đăng nhập để sử dụng mã giảm giá" : "Nhập mã giảm giá"}
                                 value={discountCode}
                                 onChange={(e) => setDiscountCode(e.target.value)}
+                                disabled={!user}
                             />
                             <button
                                 type="button"
                                 className="btn btn-secondary"
                                 onClick={handleApplyDiscount}
+                                disabled={!user}
                             >
-                                Áp
+                                Áp dụng
                             </button>
                         </div>
 
-                        {/* 🔔 Hiển thị thông báo */}
+                        {/*  Hiển thị thông báo */}
                         {message.text && (
                             <div
-                                className={`alert mt-3 alert-${message.type === "error" ? "danger" : "success"
-                                    }`}
+                                className={`alert mt-3 alert-${message.type === "error" ? "danger" : message.type === "success" ? "success" : "info"}`}
                             >
                                 {message.text}
                             </div>
@@ -414,9 +526,24 @@ const Cart = () => {
                             >
                                 ← Trở về
                             </button>
-                            <button className="btn btn-success" type="submit">
-                                Thanh toán
-                            </button>
+
+                            {!user ? (
+                                <button
+                                    className="btn btn-primary"
+                                    type="button"
+                                    onClick={handleLoginToCheckout}
+                                >
+                                    Đăng nhập để thanh toán
+                                </button>
+                            ) : (
+                                <button
+                                    className="btn btn-success"
+                                    type="submit"
+                                    disabled={cartItems.length === 0}
+                                >
+                                    Thanh toán
+                                </button>
+                            )}
                         </div>
 
                         <div className="mt-3 text-end">
