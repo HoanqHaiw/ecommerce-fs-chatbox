@@ -1,5 +1,6 @@
 // routes/orders.js
 import express from "express";
+import { protect } from "../middleware/authMiddleware.js";
 import {
     createOrder,
     getOrders,
@@ -11,7 +12,7 @@ import {
 const router = express.Router();
 
 
-router.post("/", createOrder);
+router.post("/", protect, createOrder);
 router.get("/customer", getOrdersByCustomer);
 
 // ADMIN ROUTES  

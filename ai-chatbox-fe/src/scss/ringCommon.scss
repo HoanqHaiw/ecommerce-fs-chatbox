@@ -59,12 +59,25 @@
             gap: 10px;
 
             .phone-icon {
-                font-size: 28px;
-                color: #fff;
+                display: none; // Ẩn icon
             }
 
             .phone-text {
                 color: #fff;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .saving-status {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+
+                .user-info {
+                    font-size: 12px;
+                    font-weight: 400;
+                    opacity: 0.8;
+                }
             }
         }
     }
