@@ -1,0 +1,81 @@
+{
+  "products": [
+    {
+      "_id": "67a1b2c3d4e5f67890123456",
+      "name": "Nike Air Force 1 '07",
+      "category": "Men",
+      "price": 2900000,
+      "description": "Đôi giày huyền thoại Nike Air Force 1 '07 với thiết kế cổ điển, phối màu trắng tinh tế phù hợp mọi phong cách.",
+      "collections": "Classic Streetwear",
+      "stock": 50,
+      "sizes": [
+        {
+          "_id": "s1",
+          "size": 39,
+          "quantity": 10
+        },
+        {
+          "_id": "s2",
+          "size": 41,
+          "quantity": 20
+        },
+        {
+          "_id": "s3",
+          "size": 43,
+          "quantity": 20
+        },
+        {
+          "_id": "s4",
+          "size": 44,
+          "quantity": 10
+        }
+      ],
+      "images": [
+        "/uploads/nike-airforce1-1.jpg",
+        "/uploads/nike-airforce1-2.jpg",
+        "/uploads/nike-airforce1-3.jpg"
+      ]
+    },
+    {
+      "_id": "67a1b2c3d4e5f67890123457",
+      "name": "Adidas Ultraboost 22",
+      "category": "Women",
+      "price": 3500000,
+      "description": "Giày chạy bộ công nghệ Boost, êm ái và nhẹ.",
+      "collections": "Running",
+      "stock": 5,
+      "sizes": [
+        {
+          "_id": "s5",
+          "size": 36,
+          "quantity": 2
+        },
+        {
+          "_id": "s6",
+          "size": 37,
+          "quantity": 3
+        }
+      ],
+      "images": [
+        "/uploads/adidas-ultraboost.jpg"
+      ]
+    },
+    {
+      "_id": "67a1b2c3d4e5f67890123458",
+      "name": "Converse Chuck Taylor",
+      "category": "Unisex",
+      "price": 1500000,
+      "description": "Giày canvas cổ điển.",
+      "collections": "Casual",
+      "stock": 0,
+      "sizes": [
+        {
+          "_id": "s7",
+          "size": 40,
+          "quantity": 0
+        }
+      ],
+      "images": []
+    }
+  ]
+}

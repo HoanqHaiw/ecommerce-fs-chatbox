@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 
-// QUAN TRỌNG: Config dotenv ngay đầu file
+
 dotenv.config();
 
 // Debug ngay sau khi config
@@ -22,7 +22,7 @@ import revenueRoutes from "./routes/revenueRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import userAuthRoute from "./routes/userAuth.js";
-import chatRoute from "./routes/chatRoute.js"; // ← Bây giờ mới import
+import chatRoute from "./routes/chatRoute.js";
 
 connectDB();
 

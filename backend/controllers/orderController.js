@@ -49,7 +49,6 @@ export const createOrder = async (req, res) => {
     } catch (error) {
         console.error(" Create order error:", error);
 
-
         if (error.name === 'ValidationError') {
             console.log(" Validation errors:", error.errors);
         }
@@ -60,7 +59,6 @@ export const createOrder = async (req, res) => {
         });
     }
 };
-
 
 export const getOrders = async (req, res) => {
     try {
@@ -81,7 +79,6 @@ export const getOrders = async (req, res) => {
         });
     }
 };
-
 
 export const getOrdersByCustomer = async (req, res) => {
     try {
@@ -114,6 +111,55 @@ export const getOrdersByCustomer = async (req, res) => {
     }
 };
 
+export const updateOrder = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updateData = req.body;
+
+        console.log(" Updating order:", id, "with data:", updateData);
+
+
+        const existingOrder = await Order.findById(id);
+        if (!existingOrder) {
+            return res.status(404).json({
+                success: false,
+                message: "Không tìm thấy đơn hàng"
+            });
+        }
+
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            id,
+            updateData,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        console.log(" Order updated successfully:", updatedOrder._id);
+
+        res.json({
+            success: true,
+            message: "Cập nhật đơn hàng thành công",
+            order: updatedOrder
+        });
+    } catch (error) {
+        console.error(" Update order error:", error);
+
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                success: false,
+                message: "Dữ liệu không hợp lệ: " + error.message
+            });
+        }
+
+        res.status(500).json({
+            success: false,
+            message: "Lỗi server: " + error.message
+        });
+    }
+};
 
 export const updateOrderStatus = async (req, res) => {
     try {
@@ -150,7 +196,6 @@ export const updateOrderStatus = async (req, res) => {
         });
     }
 };
-
 
 export const deleteOrder = async (req, res) => {
     try {

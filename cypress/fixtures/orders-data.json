@@ -1,0 +1,80 @@
+[
+    {
+        "_id": "67a1b2c3d4e5f67890123456",
+        "customerName": "Nguyễn Văn A",
+        "email": "nguyenvana@email.com",
+        "phone": "0912345678",
+        "total": 1450000,
+        "subtotal": 1450000,
+        "discount": 0,
+        "status": "pending",
+        "paymentMethod": "cod",
+        "address": {
+            "street": "123 Đường ABC",
+            "city": "TP.HCM",
+            "district": "Quận 1"
+        },
+        "items": [
+            {
+                "productId": "123",
+                "productName": "Nike Air Force 1",
+                "quantity": 1,
+                "price": 1450000,
+                "size": 41
+            }
+        ],
+        "createdAt": "2024-12-03T10:30:00.000Z"
+    },
+    {
+        "_id": "67a1b2c3d4e5f67890123457",
+        "customerName": "Trần Thị B",
+        "email": "tranthib@email.com",
+        "phone": "0923456789",
+        "total": 2900000,
+        "subtotal": 2900000,
+        "discount": 0,
+        "status": "confirmed",
+        "paymentMethod": "banking",
+        "address": {
+            "street": "456 Đường XYZ",
+            "city": "TP.HCM",
+            "district": "Quận 2"
+        },
+        "items": [
+            {
+                "productId": "124",
+                "productName": "Adidas Ultraboost",
+                "quantity": 2,
+                "price": 1450000,
+                "size": 39
+            }
+        ],
+        "createdAt": "2024-12-02T14:20:00.000Z"
+    },
+    {
+        "_id": "67a1b2c3d4e5f67890123458",
+        "customerName": "Lê Văn C",
+        "email": "levanc@email.com",
+        "phone": "0934567890",
+        "total": 4350000,
+        "subtotal": 4350000,
+        "discount": 0,
+        "status": "completed",
+        "paymentMethod": "cod",
+        "address": {
+            "street": "789 Đường DEF",
+            "city": "TP.HCM",
+            "district": "Quận 3"
+        },
+        "items": [
+            {
+                "productId": "125",
+                "productName": "Converse Chuck Taylor",
+                "quantity": 3,
+                "price": 1450000,
+                "size": 40
+            }
+        ],
+        "createdAt": "2024-12-01T09:15:00.000Z"
+    }
+]

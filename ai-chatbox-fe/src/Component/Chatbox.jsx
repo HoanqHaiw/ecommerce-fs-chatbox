@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "../scss/ringCommon.scss";
 
 const ChatBox = () => {
@@ -15,6 +15,55 @@ const ChatBox = () => {
     const [userId, setUserId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef(null);
+
+    // Format message with links
+    const formatMessage = (text) => {
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const parts = text.split(urlRegex);
+
+        return parts.map((part, index) => {
+            if (part.match(urlRegex)) {
+                return (
+                    <a
+                        key={index}
+                        href={part}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="message-link"
+                    >
+                        {part}
+                    </a>
+                );
+            }
+            return part;
+        });
+    };
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    // Define loadChatHistory with useCallback to avoid dependency issues
+    const loadChatHistory = useCallback(async (sessionId) => {
+        if (!userId) return;
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/chat/history/${sessionId}?userId=${userId}`);
+            const data = await response.json();
+
+            if (data.success && data.session) {
+                const formattedMessages = data.session.messages.map(msg => ({
+                    sender: msg.role === "user" ? "user" : "bot",
+                    text: msg.content,
+                    type: msg.type || "text"
+                }));
+                setMessages(formattedMessages);
+                console.log('📁 Loaded chat history:', formattedMessages.length, 'messages');
+            }
+        } catch (error) {
+            console.error("Error loading chat history:", error);
+        }
+    }, [userId]);
 
     // User management
     useEffect(() => {
@@ -47,36 +96,11 @@ const ChatBox = () => {
         };
 
         loadUser();
-    }, []);
+    }, [loadChatHistory]);
 
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    const loadChatHistory = async (sessionId) => {
-        if (!userId) return;
-
-        try {
-            const response = await fetch(`http://localhost:5000/api/chat/history/${sessionId}?userId=${userId}`);
-            const data = await response.json();
-
-            if (data.success && data.session) {
-                const formattedMessages = data.session.messages.map(msg => ({
-                    sender: msg.role === "user" ? "user" : "bot",
-                    text: msg.content,
-                    type: msg.type || "text"
-                }));
-                setMessages(formattedMessages);
-                console.log('📁 Loaded chat history:', formattedMessages.length, 'messages');
-            }
-        } catch (error) {
-            console.error("Error loading chat history:", error);
-        }
-    };
 
     const sendMessage = async () => {
         if (!input.trim()) return;
@@ -150,49 +174,6 @@ const ChatBox = () => {
         console.log('🗑️ Chat cleared');
     };
 
-    const handleLogin = (userData) => {
-        setUserId(userData.id);
-        localStorage.setItem('user', JSON.stringify(userData));
-        console.log('🔑 User logged in:', userData.id);
-    };
-
-    const handleLogout = () => {
-        if (sessionId) {
-            fetch(`http://localhost:5000/api/chat/session/${sessionId}/deactivate`, {
-                method: 'POST'
-            });
-        }
-
-        setUserId(null);
-        setSessionId(null);
-        localStorage.removeItem('user');
-        localStorage.removeItem('chatSessionId');
-        console.log('👋 User logged out');
-    };
-
-    // Format message with links
-    const formatMessage = (text) => {
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        const parts = text.split(urlRegex);
-
-        return parts.map((part, index) => {
-            if (part.match(urlRegex)) {
-                return (
-                    <a
-                        key={index}
-                        href={part}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="message-link"
-                    >
-                        {part}
-                    </a>
-                );
-            }
-            return part;
-        });
-    };
-
     return (
         <div className={`phone-ring chatbox ${isOpen ? "open" : ""}`}>
             {isOpen ? (
@@ -200,12 +181,6 @@ const ChatBox = () => {
                     <div className="chatbox-header">
                         <div className="header-left">
                             <h5>Customer Service</h5>
-                            {sessionId && (
-                                <span className="session-badge">💾 Đang lưu</span>
-                            )}
-                            {userId && (
-                                <span className="user-badge">👤 {userId.substring(0, 8)}</span>
-                            )}
                         </div>
                         <div className="header-right">
                             <button onClick={clearChat} className="clear-btn" title="Xóa lịch sử">

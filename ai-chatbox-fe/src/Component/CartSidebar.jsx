@@ -14,7 +14,6 @@ const CartSidebar = () => {
         closeSidebar,
     } = useCart();
 
-
     const formatPrice = (price) =>
         new Intl.NumberFormat("vi-VN").format(price) + " ₫";
 
@@ -29,7 +28,7 @@ const CartSidebar = () => {
             {/* Sidebar giỏ hàng */}
             <div className={`cart-sidebar ${isSidebarOpen ? "open" : ""}`}>
                 <div className="sidebar-header">
-                    <h5>Cart</h5>
+                    <h5>Giỏ hàng</h5>
                     <button onClick={closeSidebar} className="close-btn">
                         ×
                     </button>
@@ -37,12 +36,12 @@ const CartSidebar = () => {
 
                 {/* Nếu giỏ hàng trống */}
                 {cartItems.length === 0 ? (
-                    <p className="empty">Empty Cart</p>
+                    <p className="empty">Giỏ hàng trống</p>
                 ) : (
                     <div className="sidebar-content">
                         {cartItems.map((item) => (
                             <div
-                                key={item.id}
+                                key={`${item.id}_${item.selectedSize || item.size || 'nosize'}`}
                                 className="cart-item d-flex align-items-center"
                             >
                                 <img
@@ -53,16 +52,35 @@ const CartSidebar = () => {
 
                                 <div className="info flex-grow-1 ms-2">
                                     <h6 className="mb-1">{item.name}</h6>
+
+                                    {/* HIỂN THỊ SIZE NẾU CÓ */}
+                                    {(item.selectedSize || item.size) && (
+                                        <div className="size-info mb-1">
+                                            <span className="badge bg-secondary">
+                                                Size: {item.selectedSize || item.size}
+                                            </span>
+                                        </div>
+                                    )}
+
                                     <p className="text-muted mb-1">
                                         {formatPrice(item.price)}
                                     </p>
 
                                     <div className="quantity d-flex align-items-center">
-                                        <button onClick={() => decreaseQuantity(item.id)}>
+                                        <button
+                                            onClick={() => decreaseQuantity(item.id)}
+                                            className="btn-qty"
+                                        >
                                             -
                                         </button>
                                         <span className="mx-2">{item.quantity}</span>
-                                        <button onClick={() => addToCart(item)}>+</button>
+                                        <button
+                                            onClick={() => addToCart(item)}
+                                            className="btn-qty"
+                                            disabled={item.quantity >= (item.stock || 99)}
+                                        >
+                                            +
+                                        </button>
                                     </div>
                                 </div>
 
@@ -70,7 +88,7 @@ const CartSidebar = () => {
                                     className="remove"
                                     onClick={() => removeFromCart(item.id)}
                                 >
-                                    Delete
+                                    Xóa
                                 </button>
                             </div>
                         ))}
@@ -81,12 +99,12 @@ const CartSidebar = () => {
                 {cartItems.length > 0 && (
                     <div className="sidebar-footer">
                         <div className="subtotal d-flex justify-content-between align-items-center">
-                            <span>Total Test :</span>
+                            <span>Tổng cộng:</span>
                             <strong>{formatPrice(subtotal)}</strong>
                         </div>
                         <div className="actions">
                             <Link to="/cart" onClick={closeSidebar} className="view-cart">
-                                View Cart
+                                Xem giỏ hàng
                             </Link>
                         </div>
                     </div>

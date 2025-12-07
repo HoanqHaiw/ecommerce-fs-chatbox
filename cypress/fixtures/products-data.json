@@ -1,0 +1,54 @@
+{
+    "products": [
+        {
+            "_id": "67a1b2c3d4e5f67890123456",
+            "name": "Nike Air Force 1 '07",
+            "price": 2900000,
+            "category": "Men",
+            "description": "Đôi giày huyền thoại Nike Air Force 1 '07 với thiết kế cổ điển, phối màu trắng tinh tế phù hợp mọi phong cách.",
+            "collections": [
+                "Classic Streetwear"
+            ],
+            "stock": 50,
+            "sizes": [
+                {
+                    "size": 39,
+                    "quantity": 10
+                },
+                {
+                    "size": 41,
+                    "quantity": 20
+                }
+            ],
+            "images": [
+                "/uploads/nike-airforce1-1.jpg"
+            ],
+            "createdAt": "2024-12-01T10:00:00.000Z"
+        },
+        {
+            "_id": "67a1b2c3d4e5f67890123457",
+            "name": "Adidas Ultraboost 22",
+            "price": 3500000,
+            "category": "Women",
+            "description": "Giày chạy bộ công nghệ Boost, êm ái và nhẹ.",
+            "collections": [
+                "Running"
+            ],
+            "stock": 25,
+            "sizes": [
+                {
+                    "size": 36,
+                    "quantity": 10
+                },
+                {
+                    "size": 37,
+                    "quantity": 15
+                }
+            ],
+            "images": [
+                "/uploads/adidas-ultraboost.jpg"
+            ],
+            "createdAt": "2024-11-30T14:30:00.000Z"
+        }
+    ]
+}
