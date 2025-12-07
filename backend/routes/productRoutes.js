@@ -21,12 +21,17 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-
+// Routes
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);
 router.get("/collection/:collectionName", getProductsByCollection);
+
+
 router.post("/", upload.array("images", 3), createProduct);
 router.put("/:id", upload.array("images", 3), updateProduct);
 router.delete("/:id", deleteProduct);
+
+
+router.put("/public/:id", upload.array("images", 3), updateProduct);
 
 export default router;

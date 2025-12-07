@@ -7,7 +7,6 @@ function ProductCard({ product }) {
     const navigate = useNavigate();
     const { addToCart } = useCart();
 
-
     const formatPrice = (price) =>
         new Intl.NumberFormat("vi-VN").format(price) + " ₫";
 
@@ -15,15 +14,20 @@ function ProductCard({ product }) {
         ? `http://localhost:5000${product.images[0]}`
         : "https://via.placeholder.com/250x250?text=No+Image";
 
-    const handleAddToCart = (e) => {
+    // Hàm xử lý click vào card
+    const handleCardClick = () => {
+        navigate(`/products/${product._id || product.id}`);
+    };
+
+    const handleAddToCartClick = (e) => {
         e.stopPropagation();
-        addToCart(product, 1, true);
+        navigate(`/products/${product._id || product.id}`);
     };
 
     return (
         <div
             className="card product-card shadow-sm text-center"
-            onClick={() => navigate(`/products/${product._id || product.id}`)}
+            onClick={handleCardClick}
         >
             <div className="card-img-wrapper">
                 <img
@@ -40,13 +44,13 @@ function ProductCard({ product }) {
                 <p className="text-primary fw-bold mb-2">{formatPrice(product.price)}</p>
                 <button
                     className="btn btn-dark w-100 add-cart-btn"
-                    onClick={handleAddToCart}
+                    onClick={handleAddToCartClick}
                 >
-                    Add to cart
+                    View Details
                 </button>
             </div>
         </div>
     );
-
 }
+
 export default ProductCard;

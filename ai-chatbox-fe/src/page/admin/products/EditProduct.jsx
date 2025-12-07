@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { updateProduct } from "../../../api/productService";
+import React, { useState, useEffect } from "react";
+import { updateProduct, getProducts } from "../../../api/productService";
 
 const EditProduct = ({ product, onClose, onSave }) => {
     const [form, setForm] = useState({
@@ -13,8 +13,30 @@ const EditProduct = ({ product, onClose, onSave }) => {
         images: [],
     });
 
+    const [allProducts, setAllProducts] = useState([]);
+    const [errors, setErrors] = useState({});
+
+    // Load products để check tên trùng (TC_UP_04)
+    useEffect(() => {
+        const loadProducts = async () => {
+            try {
+                const products = await getProducts();
+                // QUAN TRỌNG: Loại trừ sản phẩm HIỆN TẠI khỏi danh sách check
+                setAllProducts(products.filter(p => p._id !== product._id));
+            } catch (error) {
+                console.error("Error loading products:", error);
+            }
+        };
+        loadProducts();
+    }, [product._id]);
+
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setForm({
+            ...form,
+            [name]: name === "price" || name === "stock" ? parseFloat(value) || 0 : value
+        });
+        if (errors[name]) setErrors({ ...errors, [name]: "" });
     };
 
     const handleFileChange = (e) => {
@@ -36,8 +58,50 @@ const EditProduct = ({ product, onClose, onSave }) => {
         setForm({ ...form, sizes: updatedSizes });
     };
 
+    // VALIDATION CHÍNH: FIX TC_UP_03 và TC_UP_04
+    const validateForm = () => {
+        const newErrors = {};
+
+        // TC_UP_04: Check tên trùng (CHỈ với sản phẩm KHÁC)
+        if (!form.name.trim()) {
+            newErrors.name = "Tên sản phẩm là bắt buộc";
+        } else if (form.name.trim() !== product.name) {
+            // CHỈ check nếu tên thay đổi so với ban đầu
+            const isDuplicate = allProducts.some(
+                p => p.name.toLowerCase().trim() === form.name.toLowerCase().trim()
+            );
+            if (isDuplicate) {
+                newErrors.name = "Tên sản phẩm đã tồn tại!";
+            }
+        }
+        // Nếu tên không đổi (form.name === product.name) → KHÔNG check
+
+        // TC_UP_03: Check giá âm
+        if (!form.price || form.price === "") {
+            newErrors.price = "Giá là bắt buộc";
+        } else if (parseFloat(form.price) <= 0) {
+            newErrors.price = "Giá phải lớn hơn 0";
+        }
+
+        // Check số lượng size không âm
+        form.sizes.forEach((size, index) => {
+            if (size.quantity < 0) {
+                newErrors[`size_${index}`] = "Số lượng không được âm";
+            }
+        });
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate trước khi submit
+        if (!validateForm()) {
+            alert("Vui lòng sửa các lỗi trước khi lưu!");
+            return;
+        }
 
         const formData = new FormData();
         formData.append("name", form.name);
@@ -54,10 +118,11 @@ const EditProduct = ({ product, onClose, onSave }) => {
 
         try {
             await updateProduct(product._id, formData);
-            onSave(); // refresh list
-            onClose(); // đóng modal
+            onSave();
+            onClose();
         } catch (error) {
             console.error(" Error update products", error);
+            alert("Lỗi: " + (error.message || "Vui lòng thử lại"));
         }
     };
 
@@ -66,11 +131,29 @@ const EditProduct = ({ product, onClose, onSave }) => {
             <form onSubmit={handleSubmit} encType="multipart/form-data" className="edit-product-form">
                 <h3>Update Products</h3>
 
+                {/* Tên sản phẩm với validation TC_UP_04 */}
                 <label>Name Product</label>
-                <input type="text" name="name" value={form.name} onChange={handleChange} required />
+                <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                    className={errors.name ? "error" : ""}
+                />
+                {errors.name && <span className="error-text">{errors.name}</span>}
 
+                {/* Giá với validation TC_UP_03 */}
                 <label>Price</label>
-                <input type="number" name="price" value={form.price} onChange={handleChange} required />
+                <input
+                    type="number"
+                    name="price"
+                    value={form.price}
+                    onChange={handleChange}
+                    required
+                    className={errors.price ? "error" : ""}
+                />
+                {errors.price && <span className="error-text">{errors.price}</span>}
 
                 <label>Category</label>
                 <input type="text" name="category" value={form.category} onChange={handleChange} />
@@ -106,6 +189,7 @@ const EditProduct = ({ product, onClose, onSave }) => {
                             value={s.quantity}
                             onChange={(e) => handleSizeChange(index, "quantity", e.target.value)}
                             required
+                            className={errors[`size_${index}`] ? "error" : ""}
                         />
                         {form.sizes.length > 1 && (
                             <button type="button" onClick={() => removeSizeRow(index)}>−</button>

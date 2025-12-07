@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../Component/Navbar";
 import Footer from "../Component/Footer";
 import "../scss/checkOrder.scss";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const CheckOrder = () => {
     const [orders, setOrders] = useState([]);
@@ -13,7 +15,7 @@ const CheckOrder = () => {
     const [filterStatus, setFilterStatus] = useState("all");
     const [sortBy, setSortBy] = useState("newest");
     const [user, setUser] = useState(null);
-
+    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
     useEffect(() => {
         checkAuth();
@@ -51,7 +53,6 @@ const CheckOrder = () => {
         try {
             console.log(" Fetching orders từ backend cho user:", userEmail);
 
-            // Gọi API lấy tất cả orders từ backend
             const res = await fetch(`http://localhost:5000/api/orders`, {
                 method: "GET",
                 headers: {
@@ -89,7 +90,6 @@ const CheckOrder = () => {
 
             if (userOrders.length > 0) {
                 setOrders(userOrders);
-                setSuccess(`Tìm thấy ${userOrders.length} đơn hàng của bạn`);
             } else {
                 setOrders([]);
                 setSuccess("Bạn chưa có đơn hàng nào");
@@ -104,7 +104,6 @@ const CheckOrder = () => {
         }
     };
 
-    // Refresh danh sách đơn hàng
     const refreshOrders = () => {
         const userInfo = localStorage.getItem("userInfo");
         if (userInfo) {
@@ -115,7 +114,6 @@ const CheckOrder = () => {
         }
     };
 
-    // Hủy đơn hàng
     const cancelOrder = async (orderId) => {
         if (!window.confirm("Bạn có chắc muốn hủy đơn hàng này? Hành động này không thể hoàn tác.")) {
             return;
@@ -152,7 +150,6 @@ const CheckOrder = () => {
         return cancellableStatuses.includes(order.status);
     };
 
-
     const getStatusBadge = (status) => {
         const statusConfig = {
             "pending": { class: "warning", text: "Chờ xác nhận", icon: "⏳", desc: "Đơn hàng đang chờ xác nhận" },
@@ -167,6 +164,17 @@ const CheckOrder = () => {
         return statusConfig[status] || { class: "secondary", text: status, icon: "❓", desc: "Trạng thái không xác định" };
     };
 
+    const getStatusColor = (statusClass) => {
+        const colors = {
+            "warning": [241, 196, 15],
+            "info": [52, 152, 219],
+            "primary": [41, 128, 185],
+            "success": [46, 204, 113],
+            "danger": [231, 76, 60],
+            "secondary": [149, 165, 166]
+        };
+        return colors[statusClass] || colors.secondary;
+    };
 
     const formatDate = (dateString) => {
         if (!dateString) return "Chưa có ngày";
@@ -179,26 +187,21 @@ const CheckOrder = () => {
         });
     };
 
-
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('vi-VN').format(amount || 0) + '₫';
     };
-
 
     const getTotalItems = (order) => {
         if (!order.items || !Array.isArray(order.items)) return 0;
         return order.items.reduce((total, item) => total + (item.quantity || 0), 0);
     };
 
-
     const getFilteredAndSortedOrders = () => {
         let filtered = orders;
-
 
         if (filterStatus !== "all") {
             filtered = filtered.filter(order => order.status === filterStatus);
         }
-
 
         filtered = [...filtered].sort((a, b) => {
             switch (sortBy) {
@@ -218,14 +221,12 @@ const CheckOrder = () => {
         return filtered;
     };
 
-    // Tính thời gian còn lại để có thể hủy đơn
     const getCancelTimeLeft = (createdAt) => {
         const created = new Date(createdAt);
         const now = new Date();
         const timeDiff = now - created;
         const hoursDiff = timeDiff / (1000 * 60 * 60);
 
-        // Cho phép hủy trong 2 giờ đầu
         const allowedCancelHours = 2;
         if (hoursDiff >= allowedCancelHours) {
             return null;
@@ -233,6 +234,196 @@ const CheckOrder = () => {
 
         const minutesLeft = Math.floor((allowedCancelHours * 60) - (hoursDiff * 60));
         return minutesLeft;
+    };
+
+    const generateInvoicePDF = (order) => {
+        setIsGeneratingPDF(true);
+        try {
+            const doc = new jsPDF({
+                orientation: "portrait",
+                unit: "mm",
+                format: "a4"
+            });
+
+            const storeInfo = {
+                name: "Doan Tong Outlet",
+                address: "41 Yên Nội, Quốc Oai, TP. Hà Nội",
+                phone: "0389816563",
+                email: "support@doantongoutlet.vn",
+                website: "https://doantongoutlet.vn",
+                taxCode: "0123456789"
+            };
+
+            const primaryColor = [41, 128, 185];
+            const secondaryColor = [52, 73, 94];
+
+            doc.setFontSize(24);
+            doc.setTextColor(...primaryColor);
+            doc.setFont("helvetica", "bold");
+            doc.text("HÓA ĐƠN BÁN HÀNG", 105, 20, { align: "center" });
+
+            doc.setFontSize(10);
+            doc.setTextColor(...secondaryColor);
+            doc.setFont("helvetica", "normal");
+            doc.text(storeInfo.name, 20, 30);
+            doc.text(`Địa chỉ: ${storeInfo.address}`, 20, 35);
+            doc.text(`Điện thoại: ${storeInfo.phone}`, 20, 40);
+            doc.text(`Email: ${storeInfo.email}`, 20, 45);
+            doc.text(`MST: ${storeInfo.taxCode}`, 20, 50);
+
+            doc.text(`Mã hóa đơn: HD-${order._id?.slice(-8).toUpperCase()}`, 150, 30);
+            doc.text(`Ngày in: ${new Date().toLocaleDateString('vi-VN')}`, 150, 35);
+            doc.text(`Ngày đặt: ${new Date(order.createdAt).toLocaleDateString('vi-VN')}`, 150, 40);
+            doc.text(`Khách hàng: ${order.customerName || 'N/A'}`, 150, 45);
+
+            doc.setDrawColor(200, 200, 200);
+            doc.line(20, 55, 190, 55);
+
+            doc.setFontSize(12);
+            doc.setTextColor(...secondaryColor);
+            doc.setFont("helvetica", "bold");
+            doc.text("THÔNG TIN KHÁCH HÀNG", 20, 65);
+
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Họ tên: ${order.customerName || 'N/A'}`, 20, 72);
+            doc.text(`Email: ${order.email || 'N/A'}`, 20, 77);
+            doc.text(`SĐT: ${order.phone || 'N/A'}`, 20, 82);
+
+            if (order.address) {
+                const addressText = `${order.address.specific || ''}${order.address.specific ? ', ' : ''}${order.address.ward || ''}${order.address.ward ? ', ' : ''}${order.address.district || ''}${order.address.district ? ', ' : ''}${order.address.city || ''}`;
+                doc.text(`Địa chỉ: ${addressText}`, 20, 87);
+            }
+
+            const tableTop = 95;
+
+            doc.setFontSize(11);
+            doc.setTextColor(255, 255, 255);
+            doc.setFillColor(...primaryColor);
+            doc.rect(20, tableTop, 170, 8, 'F');
+
+            doc.text("STT", 25, tableTop + 5.5);
+            doc.text("Tên sản phẩm", 40, tableTop + 5.5);
+            doc.text("Đơn giá", 110, tableTop + 5.5);
+            doc.text("SL", 135, tableTop + 5.5);
+            doc.text("Thành tiền", 160, tableTop + 5.5);
+
+            let currentY = tableTop + 15;
+            let rowHeight = 10;
+
+            if (order.items && order.items.length > 0) {
+                order.items.forEach((item, index) => {
+                    if (currentY > 250) {
+                        doc.addPage();
+                        currentY = 20;
+                    }
+
+                    if (index % 2 === 0) {
+                        doc.setFillColor(245, 245, 245);
+                        doc.rect(20, currentY - 5, 170, rowHeight, 'F');
+                    }
+
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont("helvetica", "normal");
+
+                    doc.text((index + 1).toString(), 25, currentY);
+                    doc.text(item.name || 'Sản phẩm', 40, currentY);
+                    doc.text(formatCurrency(item.price), 110, currentY);
+                    doc.text(item.quantity.toString(), 135, currentY);
+                    doc.text(formatCurrency(item.price * item.quantity), 160, currentY);
+
+                    if (item.size || item.color) {
+                        doc.setFontSize(8);
+                        doc.setTextColor(100, 100, 100);
+                        let extraInfo = [];
+                        if (item.size) extraInfo.push(`Size: ${item.size}`);
+                        if (item.color) extraInfo.push(`Màu: ${item.color}`);
+                        doc.text(extraInfo.join(' | '), 40, currentY + 4);
+                    }
+
+                    currentY += rowHeight;
+                });
+            }
+
+            const summaryTop = Math.max(currentY + 10, 180);
+
+            doc.setFontSize(11);
+            doc.setTextColor(...secondaryColor);
+            doc.setFont("helvetica", "bold");
+
+            doc.text("Tổng tiền hàng:", 130, summaryTop);
+            doc.text(formatCurrency(order.subtotal || order.total), 160, summaryTop);
+
+            doc.text("Phí vận chuyển:", 130, summaryTop + 8);
+            doc.text(formatCurrency(order.shippingFee || 0), 160, summaryTop + 8);
+
+            if (order.discount > 0) {
+                doc.setTextColor(231, 76, 60);
+                doc.text(`Giảm giá (${order.discount}%):`, 130, summaryTop + 16);
+                doc.text(`-${formatCurrency((order.subtotal * order.discount) / 100)}`, 160, summaryTop + 16);
+            }
+
+            const totalTop = summaryTop + (order.discount > 0 ? 24 : 16);
+            doc.setDrawColor(...primaryColor);
+            doc.line(130, totalTop - 2, 170, totalTop - 2);
+
+            doc.setFontSize(14);
+            doc.setTextColor(...primaryColor);
+            doc.setFont("helvetica", "bold");
+            doc.text("TỔNG CỘNG:", 130, totalTop + 8);
+            doc.text(formatCurrency(order.total), 160, totalTop + 8);
+
+            doc.setFontSize(10);
+            doc.setTextColor(...secondaryColor);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Phương thức: ${order.paymentMethod === "cod" ? "Thanh toán khi nhận hàng" : "Chuyển khoản"}`, 20, totalTop + 20);
+
+            const status = getStatusBadge(order.status);
+            doc.setFontSize(10);
+            doc.setTextColor(255, 255, 255);
+            doc.setFillColor(...getStatusColor(status.class));
+            const statusWidth = doc.getTextWidth(status.text) + 10;
+            doc.rect(150, totalTop + 15, statusWidth, 8, 'F');
+            doc.text(status.text, 155, totalTop + 20);
+
+            const footerTop = totalTop + 40;
+
+            doc.setFontSize(10);
+            doc.setTextColor(...secondaryColor);
+
+            doc.line(40, footerTop + 20, 80, footerTop + 20);
+            doc.text("Người mua hàng", 50, footerTop + 25, { align: "center" });
+            doc.text("(Ký và ghi rõ họ tên)", 50, footerTop + 30, { align: "center" });
+
+            doc.line(110, footerTop + 20, 150, footerTop + 20);
+            doc.text("Người bán hàng", 130, footerTop + 25, { align: "center" });
+            doc.text("(Ký và ghi rõ họ tên)", 130, footerTop + 30, { align: "center" });
+
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text("Lưu ý:", 20, footerTop + 45);
+            doc.text("- Hóa đơn có giá trị thanh toán và bảo hành sản phẩm", 20, footerTop + 50);
+            doc.text("- Thời hạn bảo hành: 12 tháng kể từ ngày mua", 20, footerTop + 55);
+            doc.text("- Đổi trả trong vòng 7 ngày nếu sản phẩm lỗi", 20, footerTop + 60);
+            doc.text(`- Liên hệ hotline ${storeInfo.phone} để được hỗ trợ`, 20, footerTop + 65);
+
+            doc.setFontSize(11);
+            doc.setTextColor(...primaryColor);
+            doc.setFont("helvetica", "italic");
+            doc.text("Cảm ơn quý khách đã mua sắm tại TECHSTORE!", 105, footerTop + 80, { align: "center" });
+
+            const fileName = `Hoa-don-${order._id?.slice(-8).toUpperCase()}-${new Date().getTime()}.pdf`;
+            doc.save(fileName);
+
+            setSuccess("Đã tải xuống hóa đơn thành công!");
+
+        } catch (error) {
+            console.error("Lỗi tạo PDF:", error);
+            setError("Không thể tạo hóa đơn. Vui lòng thử lại.");
+        } finally {
+            setIsGeneratingPDF(false);
+        }
     };
 
     const filteredOrders = getFilteredAndSortedOrders();
@@ -265,7 +456,6 @@ const CheckOrder = () => {
             <div className="check-order-page container py-5">
                 <div className="row justify-content-center">
                     <div className="col-lg-12">
-                        {/* Header */}
                         <div className="text-center mb-5">
                             <h1 className="display-5 fw-bold text-primary mb-3">
                                 <i className="fas fa-shopping-bag me-3"></i>
@@ -276,7 +466,6 @@ const CheckOrder = () => {
                             </p>
                         </div>
 
-                        {/* Thông báo lỗi đăng nhập */}
                         {!user && (
                             <div className="alert alert-warning text-center">
                                 <i className="fas fa-exclamation-triangle me-2"></i>
@@ -287,7 +476,6 @@ const CheckOrder = () => {
                             </div>
                         )}
 
-                        {/* Bộ lọc và sắp xếp */}
                         {user && orders.length > 0 && (
                             <div className="filter-section card shadow-sm mb-4">
                                 <div className="card-body">
@@ -342,7 +530,6 @@ const CheckOrder = () => {
                             </div>
                         )}
 
-                        {/* Messages */}
                         {error && (
                             <div className="alert alert-danger d-flex align-items-center">
                                 <i className="fas fa-exclamation-triangle me-3 fs-5"></i>
@@ -363,7 +550,6 @@ const CheckOrder = () => {
                             </div>
                         )}
 
-                        {/* Orders List */}
                         {user && filteredOrders.length > 0 && (
                             <div className="orders-section">
                                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -417,7 +603,6 @@ const CheckOrder = () => {
                                                 </div>
 
                                                 <div className="card-body py-4">
-                                                    {/* Order Items Preview */}
                                                     <h6 className="fw-semibold mb-3">
                                                         <i className="fas fa-box me-2"></i>
                                                         Sản phẩm đã đặt
@@ -459,7 +644,6 @@ const CheckOrder = () => {
                                                         )}
                                                     </div>
 
-                                                    {/* Order Summary */}
                                                     <div className="d-flex justify-content-between align-items-center border-top pt-3">
                                                         <div className="d-flex align-items-center flex-wrap gap-3">
                                                             <small className="text-muted">
@@ -510,7 +694,6 @@ const CheckOrder = () => {
                             </div>
                         )}
 
-                        {/* Empty States */}
                         {user && orders.length === 0 && !loading && !error && (
                             <div className="text-center py-5">
                                 <div className="empty-state-icon mb-4">
@@ -548,7 +731,6 @@ const CheckOrder = () => {
                     </div>
                 </div>
 
-                {/* Order Detail Modal */}
                 {selectedOrder && (
                     <OrderDetailModal
                         order={selectedOrder}
@@ -558,15 +740,17 @@ const CheckOrder = () => {
                         formatDate={formatDate}
                         formatCurrency={formatCurrency}
                         canCancelOrder={canCancelOrder}
+                        generateInvoicePDF={generateInvoicePDF}
+                        isGeneratingPDF={isGeneratingPDF}
                     />
                 )}
             </div>
+
         </>
     );
 };
 
-// Modal chi tiết đơn hàng component
-const OrderDetailModal = ({ order, onClose, onCancelOrder, getStatusBadge, formatDate, formatCurrency, canCancelOrder }) => {
+const OrderDetailModal = ({ order, onClose, onCancelOrder, getStatusBadge, formatDate, formatCurrency, canCancelOrder, generateInvoicePDF, isGeneratingPDF }) => {
     const status = getStatusBadge(order.status);
 
     return (
@@ -585,7 +769,6 @@ const OrderDetailModal = ({ order, onClose, onCancelOrder, getStatusBadge, forma
                         ></button>
                     </div>
                     <div className="modal-body">
-                        {/* Customer Info */}
                         <div className="row mb-4">
                             <div className="col-md-6">
                                 <h6 className="fw-semibold">
@@ -610,7 +793,6 @@ const OrderDetailModal = ({ order, onClose, onCancelOrder, getStatusBadge, forma
                             </div>
                         </div>
 
-                        {/* Status Timeline */}
                         <div className="status-timeline mb-4">
                             <h6 className="fw-semibold mb-3">
                                 <i className="fas fa-map-signs me-2"></i>
@@ -640,7 +822,6 @@ const OrderDetailModal = ({ order, onClose, onCancelOrder, getStatusBadge, forma
                             </div>
                         </div>
 
-                        {/* Order Items Full */}
                         <div className="order-items-full mb-4">
                             <h6 className="fw-semibold mb-3">
                                 <i className="fas fa-boxes me-2"></i>
@@ -680,7 +861,6 @@ const OrderDetailModal = ({ order, onClose, onCancelOrder, getStatusBadge, forma
                             ))}
                         </div>
 
-                        {/* Order Summary */}
                         <div className="order-summary card border-0 bg-light">
                             <div className="card-body">
                                 <h6 className="fw-semibold mb-3">Thông tin thanh toán</h6>
@@ -722,9 +902,13 @@ const OrderDetailModal = ({ order, onClose, onCancelOrder, getStatusBadge, forma
                         >
                             Đóng
                         </button>
-                        <button className="btn btn-primary">
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => generateInvoicePDF(order)}
+                            disabled={isGeneratingPDF}
+                        >
                             <i className="fas fa-print me-1"></i>
-                            In hóa đơn
+                            {isGeneratingPDF ? 'Đang tạo...' : 'In hóa đơn '}
                         </button>
                     </div>
                 </div>

@@ -1,0 +1,38 @@
+[
+    {
+        "_id": "67a1b2c3d4e5f67890123456",
+        "name": "Nguyễn Văn A",
+        "username": "nguyenvana",
+        "email": "nguyenvana@email.com",
+        "phone": "0912345678",
+        "vipStatus": true,
+        "createdAt": "2024-12-01T10:00:00.000Z"
+    },
+    {
+        "_id": "67a1b2c3d4e5f67890123457",
+        "name": "Trần Thị B",
+        "username": "tranthib",
+        "email": "tranthib@email.com",
+        "phone": "0923456789",
+        "vipStatus": false,
+        "createdAt": "2024-12-02T14:30:00.000Z"
+    },
+    {
+        "_id": "67a1b2c3d4e5f67890123458",
+        "name": "Lê Văn C",
+        "username": "levanc",
+        "email": "levanc@email.com",
+        "phone": "0934567890",
+        "vipStatus": true,
+        "createdAt": "2024-12-03T09:15:00.000Z"
+    },
+    {
+        "_id": "67a1b2c3d4e5f67890123459",
+        "name": "Phạm Thị D",
+        "username": "phamthid",
+        "email": "phamthid@email.com",
+        "phone": "0945678901",
+        "vipStatus": false,
+        "createdAt": "2024-12-04T16:45:00.000Z"
+    }
+]

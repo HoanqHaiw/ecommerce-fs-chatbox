@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./scssa/admin.scss";
+import "./scssa/login.scss";
 
 const LoginAdmin = () => {
     const navigate = useNavigate();

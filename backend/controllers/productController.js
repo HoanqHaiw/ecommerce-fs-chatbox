@@ -1,7 +1,6 @@
 import fs from "fs";
 import Product from "../models/productModel.js";
 
-
 export const createProduct = async (req, res) => {
     try {
         const { name, price, description, category, collections, stock, sizes } = req.body;
@@ -13,9 +12,7 @@ export const createProduct = async (req, res) => {
             });
         }
 
-
         const imagePaths = req.files?.map((file) => `/uploads/${file.filename}`) || [];
-
 
         let formattedSizes = [];
         if (sizes) {
@@ -48,24 +45,49 @@ export const createProduct = async (req, res) => {
     }
 };
 
+
 export const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, price, category, description, stock, sizes, collections } = req.body;
 
-        const parsedSizes = sizes ? JSON.parse(sizes) : [];
+        console.log(" Updating product:", id, "with data:", req.body);
+
 
         const product = await Product.findById(id);
-        if (!product) return res.status(404).json({ message: "products not value" });
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
 
-        // Cập nhật dữ liệu
-        product.name = name;
-        product.price = price;
-        product.category = category;
-        product.description = description;
-        product.stock = stock;
-        product.collections = collections;
-        product.sizes = parsedSizes;
+
+        let formattedSizes = product.sizes;
+        if (sizes) {
+            try {
+                formattedSizes = typeof sizes === "string" ? JSON.parse(sizes) : sizes;
+                formattedSizes = formattedSizes.map((s) => ({
+                    size: s.size,
+                    quantity: Number(s.quantity) || 0,
+                }));
+            } catch (error) {
+                console.error("Sizes parsing error:", error);
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid sizes format"
+                });
+            }
+        }
+
+
+        product.name = name || product.name;
+        product.price = price ? Number(price) : product.price;
+        product.category = category || product.category;
+        product.description = description || product.description;
+        product.stock = stock ? Number(stock) : product.stock;
+        product.collections = collections || product.collections;
+        product.sizes = formattedSizes;
 
 
         if (req.files && req.files.length > 0) {
@@ -82,13 +104,23 @@ export const updateProduct = async (req, res) => {
         }
 
         await product.save();
-        res.json({ message: "Update Product Success !", product });
+
+        console.log(" Product updated successfully:", product._id);
+
+        res.json({
+            success: true,
+            message: "Update Product Success!",
+            product
+        });
     } catch (error) {
-        console.error(" Lỗi updateProduct:", error);
-        res.status(500).json({ message: "Update Fall", error: error.message });
+        console.error(" Error in updateProduct:", error);
+        res.status(500).json({
+            success: false,
+            message: "Update Failed",
+            error: error.message
+        });
     }
 };
-
 
 export const deleteProduct = async (req, res) => {
     try {
@@ -96,7 +128,6 @@ export const deleteProduct = async (req, res) => {
         if (!product) {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
-
 
         product.images.forEach((imgPath) => {
             const filePath = `.${imgPath}`;
@@ -112,7 +143,6 @@ export const deleteProduct = async (req, res) => {
     }
 };
 
-
 export const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find();
@@ -122,7 +152,6 @@ export const getAllProducts = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
-
 
 export const getProductById = async (req, res) => {
     try {
@@ -135,7 +164,6 @@ export const getProductById = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
-
 
 export const getProductsByCollection = async (req, res) => {
     try {
