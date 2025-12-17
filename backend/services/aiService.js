@@ -3,6 +3,42 @@
 import ProductService from "./productService.js";
 import SessionManager from "./sessionService.js";
 
+const INTENTS = {
+    greeting: 10,
+
+    search_product: 8,
+    search_product_by_need: 9,
+    search_product_by_price: 9,
+    search_new_product: 8,
+    search_sale_product: 8,
+
+    ask_product_detail: 9,
+    ask_size: 10,
+    ask_comfort: 8,
+    ask_stock: 9,
+
+    ask_price: 9,
+    ask_promotion: 9,
+    ask_installment: 8,
+    ask_price_general: 9,
+    ask_price_specific: 15,
+
+    compare_product: 9,
+
+    ask_ordering: 9,
+    ask_payment: 9,
+    ask_delivery: 9,
+
+    ask_returns: 10,
+    ask_warranty: 9,
+
+    ask_authenticity: 10,
+    ask_care: 8,
+    ask_support: 10,
+
+    general: 0
+};
+
 // ======================
 //  CLASS: NikeShoeAdvisorBot - UPGRADED V2
 // ======================
@@ -54,50 +90,93 @@ class NikeShoeAdvisorBot {
     // --------------------------
     detectIntent(message) {
         const msg = message.toLowerCase();
-        const brand = this.extractBrand(msg);
-        const hasBrand = Boolean(brand);
+        const score = {};
+        Object.keys(INTENTS).forEach(i => score[i] = 0);
 
-        const footLength = this.extractFootLength(msg);
-        const hasSizeNumber = /\bsize\s?\d{2}\b/i.test(msg);
-        const hasPriceKeyword = /giá|bao nhiêu tiền|khuyến mãi|giảm|sale|discount|price/i.test(msg);
-        const hasSearchKeyword = /tìm|search|gợi ý|recommend|show me|có mẫu|có đôi/i.test(msg);
-        const hasProductModel = /air force|air max|pegasus|jordan|dunk|blazer|court|reaction|infinity|metcon/i.test(msg);
-        const hasBudget = Boolean(this.extractBudget(msg));
+        const hasBrand = this.extractBrand(msg);
+        const hasModel = /air force|air max|pegasus|jordan|dunk|blazer|react|vomero|mercu|phantom/i.test(msg);
+        const hasNeed = /chạy|running|gym|tập|basketball|bóng rổ|đá bóng|lifestyle|đi chơi|đi học/i.test(msg);
+        const hasBudget = this.extractBudget(msg);
+        const hasFootLength = this.extractFootLength(msg);
 
-        // Customer support
-        if (/hỗ trợ|nhân viên|trực tiếp|tư vấn|hotline|contact/i.test(msg)) return "ask_support";
-        if (/đổi|trả|bảo hành|refund|return/i.test(msg)) return "ask_returns";
-        if (/chính hãng|fake|giả|authentic/i.test(msg)) return "ask_authenticity";
-        if (/giặt|vệ sinh|chăm sóc|clean/i.test(msg)) return "ask_care";
-        if (/giao hàng|ship|delivery/i.test(msg)) return "ask_delivery";
-        if (/đặt|mua|thanh toán|order|checkout/i.test(msg)) return "ask_ordering";
+        // ===== GREETING =====
+        if (/chào|hello|hi|xin chào/i.test(msg)) score.greeting += 10;
 
-        // Size advice ONLY with foot length in cm
-        if (footLength) return "ask_size";
+        // ===== AUTH =====
+        if (/chính hãng|auth|fake|giả|uy tín/i.test(msg)) score.ask_authenticity += 10;
 
-        // Search by need (use case) - but check if hasSizeNumber first to avoid conflict
-        if (!hasSizeNumber && /(chạy|running|bóng rổ|basketball|gym|casual|đi chơi|tập|training)/i.test(msg)) {
-            return "search_product_by_need";
+        // ===== SUPPORT =====
+        if (/tư vấn|nhân viên|hỗ trợ|liên hệ|chat với người/i.test(msg)) score.ask_support += 10;
+
+        // ===== SEARCH =====
+        if (hasBrand || hasModel) score.search_product += 4;
+        if (hasNeed) score.search_product_by_need += 9;
+        if (/mới ra|new arrival/i.test(msg)) score.search_new_product += 8;
+        if (/giảm giá|sale|khuyến mãi/i.test(msg)) score.search_sale_product += 8;
+
+        if (hasBudget && /(dưới|trên|tầm|khoảng|<=|>=)/i.test(msg)) {
+            score.search_product_by_price += 15;
         }
 
-        // Search product: size number alone or with brand/model
-        if (hasSizeNumber) {
-            return "search_product";
+        // ===== PRICE =====
+        if (/giá\b|giá bao nhiêu|bao nhiêu tiền|giá này|niêm yết/i.test(msg)) {
+            // Nếu có brand hoặc model cụ thể → hỏi giá sản phẩm cụ thể
+            if (hasBrand || hasModel) {
+                score.ask_price_specific += 15;
+            } else {
+                score.ask_price_general += 12;
+            }
+        }
+        if (/mã giảm|khuyến mãi|ưu đãi/i.test(msg)) score.ask_promotion += 9;
+        if (/trả góp/i.test(msg)) score.ask_installment += 8;
+
+        // ===== SIZE =====
+        if (hasFootLength || /size bao nhiêu|mang size/i.test(msg)) score.ask_size += 10;
+        if (/còn size|còn hàng|hết hàng/i.test(msg)) score.ask_stock += 9;
+
+        // ===== PRODUCT DETAIL =====
+        if (/màu|form|rộng|ôm|chống nước|chống trơn|nặng|nhẹ|chất liệu/i.test(msg)) {
+            score.ask_product_detail += 9;
+        }
+        if (/êm|đau chân|thoải mái|đi lâu/i.test(msg)) score.ask_comfort += 8;
+
+        // ===== COMPARE =====
+        if (/so sánh|khác nhau|hơn|vs|với/i.test(msg) && hasModel) {
+            score.compare_product += 10;
         }
 
-        // Search product: brand or model or search keyword or budget
-        if (hasBrand || hasProductModel || hasSearchKeyword || hasBudget) {
-            return "search_product";
+        // ===== ACCESSORIES =====
+        if (/phụ kiện|tất|vớ|balo|túi|bag|backpack/i.test(msg)) {
+            score.search_accessories += 9;
         }
 
-        // Ask price: if has price keyword and NOT specific search (brand, model, search keyword)
-        if (hasPriceKeyword && !hasBrand && !hasProductModel && !hasSearchKeyword && !hasBudget && !hasSizeNumber) {
-            return "ask_price";
-        }
+        // ===== ORDER & DELIVERY =====
+        if (/đặt|mua|order|checkout/i.test(msg)) score.ask_ordering += 9;
+        if (/thanh toán|cod|chuyển khoản/i.test(msg)) score.ask_payment += 9;
+        if (/ship|giao hàng|bao lâu|phí ship/i.test(msg)) score.ask_delivery += 9;
 
-        if (/phụ kiện|tất|balo|bag/i.test(msg)) return "search_accessories";
+        // ===== RETURNS =====
+        if (/đổi|trả|hoàn tiền/i.test(msg)) score.ask_returns += 10;
+        if (/bảo hành/i.test(msg)) score.ask_warranty += 9;
 
-        return "general";
+        // ===== CARE =====
+        if (/giặt|vệ sinh|bảo quản|hôi|ố vàng/i.test(msg)) score.ask_care += 8;
+
+        // ===== FINAL DECISION =====
+        const sorted = Object.entries(score)
+            .sort((a, b) => b[1] - a[1]);
+
+        const [primaryIntent, topScore] = sorted[0];
+        const totalScore = Object.values(score).reduce((a, b) => a + b, 0);
+
+        const confidence = totalScore === 0
+            ? 0
+            : Number((topScore / totalScore).toFixed(2));
+
+        return {
+            primaryIntent,
+            confidence
+        };
     }
 
     // --------------------------
@@ -534,45 +613,82 @@ class NikeShoeAdvisorBot {
     // 8) Main: Generate Bot Response
     // --------------------------
     async generateBotResponse(userMessage, session) {
-        const intent = this.detectIntent(userMessage);
-        console.log('[AI] detectIntent ->', intent, '| message:', userMessage);
+        const { primaryIntent, confidence } = this.detectIntent(userMessage);
 
-        // Check for frustrated user
-        const isFrustrated = /tệ|chán|bực mình|sai|lỗi|không tốt|kém|lừa|tồi/i.test(userMessage);
-        if (isFrustrated) {
+        console.log('[AI]', primaryIntent, confidence, userMessage);
+
+        // 1. Frustrated user ưu tiên cao nhất
+        if (/tệ|chán|bực mình|sai|lỗi|không tốt|kém|lừa|tồi/i.test(userMessage)) {
             return this.handleFrustratedUser();
         }
 
-        // Route by intent
-        switch (intent) {
-            case "ask_support":
-                return this.handleSupport(userMessage);
-            case "ask_returns":
-                return this.handleReturns(userMessage);
-            case "ask_authenticity":
-                return this.handleAuthenticity(userMessage);
-            case "ask_care":
-                return this.handleCare(userMessage);
-            case "ask_delivery":
-                return this.handleDelivery(userMessage);
-            case "ask_ordering":
+        // 2. Confidence thấp → fallback
+        if (confidence < 0.35) {
+            return this.handleGeneralFallback();
+        }
+
+        // 3. Intent routing
+        switch (primaryIntent) {
+
+            case "greeting":
+                return "👋 Chào bạn! Mình là Nike Bot 👟 Bạn đang cần tư vấn gì?";
+
+            case "ask_payment":
+            case "ask_installment":
                 return this.handleOrdering(userMessage);
-            case "ask_comparison":
-                return this.handleComparison(userMessage);
-            case "ask_price":
+
+            case "ask_promotion":
                 return this.handlePriceQuery(userMessage);
-            case "ask_size":
-                return this.handleSizeAdvice(userMessage);
-            case "search_product_by_need":
-                return await this.handleProductSearchByNeed(userMessage);
+
+            case "ask_stock":
+            case "search_product_by_price":
+            case "search_new_product":
+            case "search_sale_product":
             case "search_product":
                 return await this.handleProductSearch(userMessage);
-            case "search_accessories":
-                return await this.handleAccessoriesSearch(userMessage);
+
+            case "search_product_by_need":
+                return await this.handleProductSearchByNeed(userMessage);
+
+            case "ask_price_general":
+                return this.handlePriceQuery(userMessage);
+
+            case "ask_price_specific":
+                // gọi hàm lấy giá sản phẩm cụ thể từ DB
+                return await this.handleProductSearch(userMessage);
+
+            case "compare_product":
+                return this.handleComparison(userMessage);
+
+            case "ask_size":
+                return this.handleSizeAdvice(userMessage);
+
+            case "ask_delivery":
+                return this.handleDelivery(userMessage);
+
+            case "ask_ordering":
+                return this.handleOrdering(userMessage);
+
+            case "ask_product_detail":
+                return await this.handleProductSearch(userMessage);
+
+            case "ask_support":
+                return this.handleSupport(userMessage);
+
+            case "ask_returns":
+                return this.handleReturns(userMessage);
+
+            case "ask_authenticity":
+                return this.handleAuthenticity(userMessage);
+
+            case "ask_care":
+                return this.handleCare(userMessage);
+
             default:
                 return this.handleGeneralFallback();
         }
     }
+
 
     static getFitAdvice(productLine) {
         const fitAdvice = {
